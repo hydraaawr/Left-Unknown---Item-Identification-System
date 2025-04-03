@@ -62,13 +62,14 @@ Event OnInit()
 
     Debug.Notification("Left Unknown Initialized")
     RegisterForMenu("containerMenu")
+    RegisterForMenu("LootMenu")
 EndEvent
 
 
 
 Event OnMenuOpen(String MenuName) ;; When opening a container
 
-    if MenuName == "containerMenu"
+    if (MenuName == "LootMenu" || MenuName == "containerMenu") ; for both vanilla and quickloot compat
         Debug.Notification("Opened a container")
         IdentifiableSwap()
     endIf
