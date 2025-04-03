@@ -5,7 +5,7 @@ Actor Property PlayerRef auto
 Keyword Property _LUIIS_IsIdentifiable auto
 FormList Property _LUIIS_CurrContainerIdentifiableItemsFLST auto
 FormList Property _LUIIS_PendingIdentifiableItemsFLST auto
-Weapon Property _LUIIS_UnkWeapon auto
+MiscObject Property _LUIIS_UnkWeapon auto
 
 
 Form[] CurrContainerItems
