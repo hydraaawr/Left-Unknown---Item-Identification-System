@@ -10,7 +10,7 @@ Weapon Property _LUIIS_UnkWeapon auto
 
 Form[] CurrContainerItems
 
-function IdentifiableSwap() ;;  Gets identifiable items from current container      
+function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
     
     ObjectReference CurrContainer = Game.GetCurrentCrosshairRef() ; target the container inventory with the crosshair. Inspired by Nerapharu's comment at: https://www.nexusmods.com/skyrimspecialedition/mods/120152?tab=posts&BH=1
     
@@ -62,7 +62,6 @@ Event OnInit()
 
     Debug.Notification("Left Unknown Initialized")
     RegisterForMenu("containerMenu")
-    RegisterForModEvent("CleanPendingIdentifiableList", "OnCleanPendingIdentifiableList")
 EndEvent
 
 
@@ -72,7 +71,6 @@ Event OnMenuOpen(String MenuName) ;; When opening a container
     if MenuName == "containerMenu"
         Debug.Notification("Opened a container")
         IdentifiableSwap()
-
     endIf
 
 endEvent
