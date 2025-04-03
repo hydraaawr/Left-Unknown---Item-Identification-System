@@ -4,7 +4,7 @@ Scriptname LUIIS_ItemSwapper extends ReferenceAlias
 Actor Property PlayerRef auto
 Keyword Property _LUIIS_IsIdentifiable auto
 FormList Property _LUIIS_CurrContainerIdentifiableItemsFLST auto
-FormList Property _LUIIS_PendingIdentifiableItemsFLST auto
+FormList Property _LUIIS_PendingIdentifiableLootedItemsFLST auto
 MiscObject Property _LUIIS_UnkWeapon auto
 
 
@@ -31,10 +31,7 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
 
     int NCurrContainerIdentifiableItems = _LUIIS_CurrContainerIdentifiableItemsFLST.GetSize()
     Debug.Notification("Length of the container identifiable items formlist: " + NCurrContainerIdentifiableItems)
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-    ;; Add them to the total formlist of identifiable items pending to be identified
-    _LUIIS_PendingIdentifiableItemsFLST.AddForms(_LUIIS_CurrContainerIdentifiableItemsFLST.ToArray()) ;; add to pending list the current ones
 
     ;; Replacement ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     int j = 0
@@ -48,11 +45,7 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
 
     endwhile
 
-    CurrContainer.AddItem(_LUIIS_UnkWeapon, NCurrContainerIdentifiableItems) ;; Add as many Unidentified items as Identifiable where
-
-    ;; Clean Current Formlist
-    
-    _LUIIS_CurrContainerIdentifiableItemsFLST.Revert()
+    CurrContainer.AddItem(_LUIIS_UnkWeapon, NCurrContainerIdentifiableItems) ;; Add as many Unidentified items as Identifiable were
 
 
 endfunction
@@ -75,3 +68,11 @@ Event OnMenuOpen(String MenuName) ;; When opening a container
     endIf
 
 endEvent
+
+Event OnMenuClose(String MenuName) ;; When closing a container
+    Debug.Notification("Closed a container")
+    ;; Clean Current container Formlist
+    
+    _LUIIS_CurrContainerIdentifiableItemsFLST.Revert()
+
+Endevent
