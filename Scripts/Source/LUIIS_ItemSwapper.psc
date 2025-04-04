@@ -10,16 +10,18 @@ MiscObject Property _LUIIS_UnkWeapon auto
 
 
 Form[] CurrContainerItems
+int[] PendingIdentifiableLootedUnitsArray
 int NCurrContainerIdentifiableItems
 int NPendingIdentifiableItems
-int LastNPlayerUkItems
-int property NPlayerUkItems auto
+int NPendingIdentifiableLootedItems
+int LastNPlayerUnkItems
+int property NPlayerUnkItems auto
 
 function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
     
     ObjectReference CurrContainer = Game.GetCurrentCrosshairRef() ; target the container inventory with the crosshair. Inspired by Nerapharu's comment at: https://www.nexusmods.com/skyrimspecialedition/mods/120152?tab=posts&BH=1
     
-    LastNPlayerUkItems = PlayerRef.GetItemCount(_LUIIS_UnkWeapon) ;; Counts n of player unidentified items; for later use
+    LastNPlayerUnkItems = PlayerRef.GetItemCount(_LUIIS_UnkWeapon) ;; Counts n of player unidentified items; for later use
 
 
     ;; Getting the Identifiable items in the container ;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -70,26 +72,35 @@ function UpdatePendingIdentifiableLists()
     int i = 0
     int CurrLootedCount = 0 ; Counter for looted items
 
+    ; Update the number of unidentified items for the player
+    NPlayerUnkItems = PlayerRef.GetItemCount(_LUIIS_UnkWeapon)  ; Ensure this is updated before checking
+    Debug.Notification("Updated Player Unidentified Items: " + NPlayerUnkItems)
+    
+    ; Calculate the difference between current and last count of unidentified items
+    int UnkLootedItems = NPlayerUnkItems - LastNPlayerUnkItems
+    Debug.Notification("Difference in Unidentified Items: " + UnkLootedItems)
+
     while i < NPendingIdentifiableItems
         Form currentItem = _LUIIS_PendingIdentifiableItemsFLST.GetAt(i) ; Get item from pending list
 
-        ; If identifiable item is not in the container anymore and player unidentified items number has increased, counts as looted
-        Debug.Notification("Number of uk items in player inventory before closing: " + LastNPlayerUkItems)
-        Debug.Notification("Current number of uk items in player inventory: " + NPlayerUkItems)
-        if _LUIIS_CurrContainerIdentifiableItemsFLST.Find(currentItem) == -1 && NPlayerUkItems > LastNPlayerUkItems
-           
+        ; If player has looted new unidentified items, counts as looted
+        if UnkLootedItems > 0 ; This means the player has looted at least one unidentified item
             _LUIIS_PendingIdentifiableLootedItemsFLST.AddForm(currentItem) ; Add to looted list
-            Debug.Notification("Last looted identifiable item: " + currentItem.GetName())
-            CurrLootedCount += 1 ; Increase count
+            PendingIdentifiableLootedUnitsArray[i] = UnkLootedItems ; Store the number of looted items
+            CurrLootedCount += UnkLootedItems ; Increase count by the number of looted items
+            Debug.Notification("Looted identifiable item: " + currentItem.GetName() + " x " + UnkLootedItems)
 
+            ; Update the last known unidentified items after processing
+            LastNPlayerUnkItems = NPlayerUnkItems
         endif
         
         i += 1 ; Move to the next item
     endwhile
-    
-    Debug.Notification("Looted identifiable items from last interaction: " + CurrLootedCount)
-endfunction
 
+    NPendingIdentifiableLootedItems = _LUIIS_PendingIdentifiableLootedItemsFLST.GetSize()
+    Debug.Notification("Looted identifiable items from last interaction: " + CurrLootedCount)
+    Debug.Notification("Looted Pending Identifiable Items in its formlist: " + NPendingIdentifiableLootedItems)
+endfunction
 
 
 
@@ -99,6 +110,7 @@ Event OnInit()
     Debug.Notification("Left Unknown Initialized")
     RegisterForMenu("containerMenu")
     RegisterForMenu("LootMenu")
+    PendingIdentifiableLootedUnitsArray = new int[128]
 EndEvent
 
 
