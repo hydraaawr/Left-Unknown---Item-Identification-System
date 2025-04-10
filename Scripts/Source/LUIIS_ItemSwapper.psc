@@ -7,7 +7,8 @@ MiscObject Property _LUIIS_UnkWeapon auto
 
 
 Form[] CurrContainerItems
-int NCurrContainerIdentifiableItems
+int NCurrContainerIdentifiableItems ; Number of Identifiable Items in the current container
+int NTotalIdentifiableItems ; Total identifiable items
 
 function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
 
@@ -23,17 +24,18 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
 
         if CurrContainerItems[j].HasKeyword(_LUIIS_IsIdentifiable) ;; if its identifiable
             Form IdentifiableItem = CurrContainerItems[j]
-            JFormDB.setInt(IdentifiableItem, "._LUIIS_IdentifiableItems.IdentifiableItem1", CurrContainer.GetItemCount(CurrContainerItems[j])) ; update persistent db WIP CYCLE THROUGH KEYS
-            Debug.Notification("Current identifiable items count (DB access):" + JFormDB.GetInt(IdentifiableItem,"._LUIIS_IdentifiableItems.IdentifiableItem1")) 
+            JFormDB.setInt(IdentifiableItem, "._LUIIS_IdentifiableItems." + NTotalIdentifiableItems, CurrContainer.GetItemCount(CurrContainerItems[j])) ; update persistent db WIP CYCLE THROUGH KEYS
+            Debug.Notification("Current identifiable item: " + IdentifiableItem.GetName() +  ", count: " + JFormDB.GetInt(IdentifiableItem,"._LUIIS_IdentifiableItems." + NTotalIdentifiableItems)) 
             CurrContainer.RemoveItem(IdentifiableItem) ;; Remove it
             NCurrContainerIdentifiableItems += 1
         endif
 
         j += 1
+        NTotalIdentifiableItems += 1
 
     endwhile
 
-    CurrContainer.AddItem(_LUIIS_UnkWeapon, NCurrContainerIdentifiableItems) ;; Add as many Unidentified items as Identifiable were to the container
+    CurrContainer.AddItem(_LUIIS_UnkWeapon, NCurrContainerIdentifiableItems) ;; Add as many Unidentified items to the container as Identifiable were in the same container
 
 
 endfunction
