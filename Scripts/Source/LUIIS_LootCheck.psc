@@ -8,7 +8,7 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
     if(akNewContainer == PlayerRef) ;if player looted it
         
         Debug.Notification("Player Looted Unidentified Item")
-        ItemSwapper.NPlayerUkItems += 1 ;; add to the count
+        ItemSwapper.NPlayerUnkItems += 1 ;; add to the count
         
 
 

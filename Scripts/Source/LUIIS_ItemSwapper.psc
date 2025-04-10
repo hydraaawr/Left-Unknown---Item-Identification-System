@@ -8,7 +8,8 @@ MiscObject Property _LUIIS_UnkWeapon auto
 
 Form[] CurrContainerItems
 int NCurrContainerIdentifiableItems ; Number of Identifiable Items in the current container
-int NTotalIdentifiableItems ; Total identifiable items
+int property NTotalIdentifiableItems auto ; Total number of identifiable items. Must persist bt saves
+int property NPlayerUnkItems auto ; Number of unknown items in player inventory in the moment of closing the lootmenu
 
 function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
 
@@ -44,41 +45,13 @@ endfunction
 
 
 
-; function UpdatePendingIdentifiableLists()
-;     NPendingIdentifiableItems = _LUIIS_PendingIdentifiableItemsFLST.GetSize()
-;     Debug.Notification("Total Pending Identifiable Items: " + NPendingIdentifiableItems)
+; function UpdateLootedIdentifiableItems() DEBUG
 
-;     int i = 0
-;     int CurrLootedCount = 0 ; Counter for looted items
 
-;     ; Update the number of unidentified items for the player
-;     NPlayerUnkItems = PlayerRef.GetItemCount(_LUIIS_UnkWeapon)  ; Ensure this is updated before checking
+;     ; Update the number of unidentified items in player inventory
+;     NPlayerUnkItems = PlayerRef.GetItemCount(_LUIIS_UnkWeapon)  
 ;     Debug.Notification("Updated Player Unidentified Items: " + NPlayerUnkItems)
     
-;     ; Calculate the difference between current and last count of unidentified items
-;     int UnkLootedItems = NPlayerUnkItems - LastNPlayerUnkItems
-;     Debug.Notification("Difference in Unidentified Items: " + UnkLootedItems)
-
-;     while i < NPendingIdentifiableItems
-;         Form currentItem = _LUIIS_PendingIdentifiableItemsFLST.GetAt(i) ; Get item from pending list
-
-;         ; If player has looted new unidentified items, counts as looted
-;         if UnkLootedItems > 0 ; This means the player has looted at least one unidentified item
-;             ;_LUIIS_PendingIdentifiableLootedItemsFLST.AddForm(currentItem) ; Add to looted list
-;             ;PendingIdentifiableLootedUnitsArray[i] = UnkLootedItems ; Store the number of looted items
-;             CurrLootedCount += UnkLootedItems ; Increase count by the number of looted items
-;             Debug.Notification("Looted identifiable item: " + currentItem.GetName() + " x " + UnkLootedItems)
-
-;             ; Update the last known unidentified items after processing
-;             LastNPlayerUnkItems = NPlayerUnkItems
-;         endif
-        
-;         i += 1 ; Move to the next item
-;     endwhile
-
-;     NPendingIdentifiableLootedItems = _LUIIS_PendingIdentifiableLootedItemsFLST.GetSize()
-;     Debug.Notification("Looted identifiable items from last interaction: " + CurrLootedCount)
-;     Debug.Notification("Looted Pending Identifiable Items in its formlist: " + NPendingIdentifiableLootedItems)
 ; endfunction
 
 
@@ -103,13 +76,11 @@ Event OnMenuOpen(String MenuName) ;; When opening a container
 endEvent
 
 
-; Event OnMenuClose(String MenuName) ;; When closing a container
+; Event OnMenuClose(String MenuName) ;; When closing a container DEBUG
 ;     ;Debug.Notification("Closed a container")
 
 
-;     UpdatePendingIdentifiableLists()
+;     UpdateLootedIdentifiableItems()
 
-;     ; Clean Current container Formlist
-;     _LUIIS_CurrContainerIdentifiableItemsFLST.Revert()
 
 ; Endevent
