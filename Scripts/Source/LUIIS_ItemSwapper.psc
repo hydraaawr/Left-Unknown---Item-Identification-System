@@ -9,7 +9,7 @@ MiscObject Property _LUIIS_UnkWeapon auto
 Form[] CurrContainerItems
 int NCurrContainerIdentifiableItems ; Number of Identifiable Items in the current container
 int property NTotalIdentifiableItems auto ; Total number of identifiable items. Must persist bt saves
-int property NPlayerUnkItems auto ; Number of unknown items in player inventory in the moment of closing the lootmenu
+form property IdentifiableItem auto
 
 function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
 
@@ -24,20 +24,22 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
     while j < CurrContainerItems.Length ;; travel the whole content
 
         if CurrContainerItems[j].HasKeyword(_LUIIS_IsIdentifiable) ;; if its identifiable
-            Form IdentifiableItem = CurrContainerItems[j]
-            JFormDB.setInt(IdentifiableItem, "._LUIIS_IdentifiableItems." + NTotalIdentifiableItems, CurrContainer.GetItemCount(CurrContainerItems[j])) ; update persistent db WIP CYCLE THROUGH KEYS
-            Debug.Notification("Current identifiable item: " + IdentifiableItem.GetName() +  ", count: " + JFormDB.GetInt(IdentifiableItem,"._LUIIS_IdentifiableItems." + NTotalIdentifiableItems)) 
+            IdentifiableItem = CurrContainerItems[j]
+            JFormDB.setInt(IdentifiableItem, "._LUIIS_IdentifiableItems.count", CurrContainer.GetItemCount(CurrContainerItems[j])) ; update persistent db WIP CYCLE THROUGH KEYS
+            Debug.Notification("Current identifiable item: " + IdentifiableItem.GetName() +  ", count: " + JFormDB.GetInt(IdentifiableItem,"._LUIIS_IdentifiableItems.count")) 
             CurrContainer.RemoveItem(IdentifiableItem) ;; Remove it
             NCurrContainerIdentifiableItems += 1
+            NTotalIdentifiableItems += 1 ;DEBUG
+            
         endif
 
         j += 1
-        NTotalIdentifiableItems += 1
+        
 
     endwhile
 
     CurrContainer.AddItem(_LUIIS_UnkWeapon, NCurrContainerIdentifiableItems) ;; Add as many Unidentified items to the container as Identifiable were in the same container
-
+    Debug.Notification("NTotalIdentifiableItems: " + NTotalIdentifiableItems) ; DEBUG
 
 endfunction
 
@@ -45,14 +47,6 @@ endfunction
 
 
 
-; function UpdateLootedIdentifiableItems() DEBUG
-
-
-;     ; Update the number of unidentified items in player inventory
-;     NPlayerUnkItems = PlayerRef.GetItemCount(_LUIIS_UnkWeapon)  
-;     Debug.Notification("Updated Player Unidentified Items: " + NPlayerUnkItems)
-    
-; endfunction
 
 
 
