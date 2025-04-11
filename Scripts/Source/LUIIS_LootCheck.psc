@@ -10,10 +10,9 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
         Debug.Notification("Player Looted Unidentified Item")
 
         int NPlayerUnkItems =  PlayerRef.GetItemCount(self) ; current unknown items in player inventory
-        int LootedIndex = NPlayerUnkItems - 1; -1 because NTotalIdentifiable items starts with 0 index
         Form LastIdentifiableItem = ItemSwapper.IdentifiableItem
         JFormDB.solveIntSetter(LastIdentifiableItem,"._LUIIS_IdentifiableItems.looted", 1, true) ; add "looted" to last identified item that was transformed.
-        Debug.Notification("Last looted identifiable item: " + LastIdentifiableItem.GetName() + ", .looted: " + JFormDB.Getint(LastIdentifiableItem, "._LUIIS_IdentifiableItems.looted"))
+        Debug.Notification("Last looted identifiable item: " + LastIdentifiableItem.GetName() + ", .looted: " + JFormDB.Getint(LastIdentifiableItem, "._LUIIS_IdentifiableItems.looted")) ; DEBUG
         ;; TODO: If there was 2 items in container, itll pick the last one. Maybe randomize the pick could be good
     endif
 EndEvent
