@@ -25,8 +25,9 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
 
         if CurrContainerItems[j].HasKeyword(_LUIIS_IsIdentifiable) ;; if its identifiable
             IdentifiableItem = CurrContainerItems[j]
+            JFormDB.setStr(IdentifiableItem,"._LUIIS_IdentifiableItems.name", IdentifiableItem.GetName())
             JFormDB.setInt(IdentifiableItem, "._LUIIS_IdentifiableItems.count", CurrContainer.GetItemCount(CurrContainerItems[j])) ; update persistent db WIP CYCLE THROUGH KEYS
-            Debug.Notification("Current identifiable item: " + IdentifiableItem.GetName() +  ", count: " + JFormDB.GetInt(IdentifiableItem,"._LUIIS_IdentifiableItems.count")) 
+            Debug.Notification("Current identifiable item: " + JFormDB.GetStr(IdentifiableItem,"._LUIIS_IdentifiableItems.name") +  ", count: " + JFormDB.GetInt(IdentifiableItem,"._LUIIS_IdentifiableItems.count")) 
             CurrContainer.RemoveItem(IdentifiableItem) ;; Remove it
             NCurrContainerIdentifiableItems += 1
             NTotalIdentifiableItems += 1 ;DEBUG
