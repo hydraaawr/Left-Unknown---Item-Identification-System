@@ -11,6 +11,7 @@ int NCurrContainerIdentifiableItems ; Number of Identifiable Items in the curren
 int property NTotalIdentifiableItems auto ; Total number of identifiable items. Must persist bt saves
 form property IdentifiableItem auto
 int Property IdentifiableItemArray auto ;DEBUG
+int property NPlayerUnkItems1 auto
 
 function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
 
@@ -70,6 +71,7 @@ Event OnMenuOpen(String MenuName) ;; When opening a container
     if (MenuName == "LootMenu" || MenuName == "containerMenu") ; for both vanilla and quickloot compat
         ;Debug.Notification("Opened a container")
         IdentifiableSwap()
+        NPlayerUnkItems1 = PlayerRef.GetItemCount(_LUIIS_UnkWeapon)
     endIf
 
 endEvent
