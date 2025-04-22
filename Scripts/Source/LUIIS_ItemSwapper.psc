@@ -10,6 +10,7 @@ Form[] CurrContainerItems
 int NCurrContainerIdentifiableItems ; Number of Identifiable Items in the current container
 int property NTotalIdentifiableItems auto ; Total number of identifiable items. Must persist bt saves
 form property IdentifiableItem auto
+int Property IdentifiableItemArray auto ;DEBUG
 
 function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
 
@@ -19,15 +20,18 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
 
     CurrContainerItems = CurrContainer.GetContainerForms() ; Saves the current container whole content in array. No need to initialize, this function already does it
 
+    IdentifiableItemArray = JArray.object() ;DEBUG
+
     ;; Replacement ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     int j = 0
     while j < CurrContainerItems.Length ;; travel the whole content
 
         if CurrContainerItems[j].HasKeyword(_LUIIS_IsIdentifiable) ;; if its identifiable
             IdentifiableItem = CurrContainerItems[j]
+            JArray.addForm(IdentifiableItemArray,IdentifiableItem) ;DEBUG
             JFormDB.setStr(IdentifiableItem,"._LUIIS_IdentifiableItems.name", IdentifiableItem.GetName())
-            JFormDB.setInt(IdentifiableItem, "._LUIIS_IdentifiableItems.count", CurrContainer.GetItemCount(CurrContainerItems[j])) ; update persistent db WIP CYCLE THROUGH KEYS
-            Debug.Notification("Current identifiable item: " + JFormDB.GetStr(IdentifiableItem,"._LUIIS_IdentifiableItems.name") +  ", count: " + JFormDB.GetInt(IdentifiableItem,"._LUIIS_IdentifiableItems.count")) 
+            JFormDB.setInt(IdentifiableItem, "._LUIIS_IdentifiableItems.count", CurrContainer.GetItemCount(CurrContainerItems[j])) ; update persistent db
+            Debug.Notification("Current identifiable item: " + JFormDB.GetStr(IdentifiableItem,"._LUIIS_IdentifiableItems.name") +  ", count: " + JFormDB.GetInt(IdentifiableItem,"._LUIIS_IdentifiableItems.count")) ;DEBUG
             CurrContainer.RemoveItem(IdentifiableItem) ;; Remove it
             NCurrContainerIdentifiableItems += 1
             NTotalIdentifiableItems += 1 ;DEBUG
