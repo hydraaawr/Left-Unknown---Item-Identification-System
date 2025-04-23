@@ -10,7 +10,7 @@ Form[] CurrContainerItems
 int NCurrContainerIdentifiableItems ; Number of Identifiable Items in the current container
 int property NTotalIdentifiableItems auto ; Total number of identifiable items. Must persist bt saves
 form property IdentifiableItem auto
-int Property IdentifiableItemArray auto ;DEBUG
+int Property IdentifiableItemArray auto
 int property NPlayerUnkItems1 auto
 
 function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
@@ -21,7 +21,7 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
 
     CurrContainerItems = CurrContainer.GetContainerForms() ; Saves the current container whole content in array. No need to initialize, this function already does it
 
-    IdentifiableItemArray = JArray.object() ;DEBUG
+    IdentifiableItemArray = JArray.object()
 
     ;; Replacement ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     int j = 0
@@ -29,7 +29,7 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
 
         if CurrContainerItems[j].HasKeyword(_LUIIS_IsIdentifiable) ;; if its identifiable
             IdentifiableItem = CurrContainerItems[j]
-            JArray.addForm(IdentifiableItemArray,IdentifiableItem) ;DEBUG
+            JArray.addForm(IdentifiableItemArray,IdentifiableItem)
             JFormDB.setStr(IdentifiableItem,"._LUIIS_IdentifiableItems.name", IdentifiableItem.GetName())
             JFormDB.setInt(IdentifiableItem, "._LUIIS_IdentifiableItems.count", CurrContainer.GetItemCount(CurrContainerItems[j])) ; update persistent db
             Debug.Notification("Current identifiable item: " + JFormDB.GetStr(IdentifiableItem,"._LUIIS_IdentifiableItems.name") +  ", count: " + JFormDB.GetInt(IdentifiableItem,"._LUIIS_IdentifiableItems.count")) ;DEBUG
@@ -77,11 +77,11 @@ Event OnMenuOpen(String MenuName) ;; When opening a container
 endEvent
 
 
-; Event OnMenuClose(String MenuName) ;; When closing a container DEBUG
-;     ;Debug.Notification("Closed a container")
+Event OnMenuClose(String MenuName) ;; When closing a container DEBUG
+    ;Debug.Notification("Closed a container")
 
 
-;     UpdateLootedIdentifiableItems()
+    JArray.clear(IdentifiableItemArray) ; reset
 
 
-; Endevent
+Endevent
