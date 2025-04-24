@@ -35,10 +35,11 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
             NTotalIdentifiableItems += 1
             String IdentifiableItemNamePath = "._LUIIS_IdentifiableItem" + NTotalIdentifiableItems + ".name"
             String IdentifiableItemCountPath = "._LUIIS_IdentifiableItem" + NTotalIdentifiableItems + ".count"
-
+            String IdentifiableItemFormPath = "._LUIIS_IdentifiableItem" + NTotalIdentifiableItems + ".form"
             ;Debug.Notification("Path: " + IdentifiableItemNamePath) ;;  DEBUG
             JDB.solveStrSetter(IdentifiableItemNamePath, IdentifiableItem.GetName(), true) ;  its name
             JDB.solveIntSetter(IdentifiableItemCountPath, CurrContainer.GetItemCount(IdentifiableItem), true) ; its count
+            JDB.solveFormSetter(IdentifiableItemFormPath, IdentifiableItem, true) ; its form
             Debug.Notification("Current identifiable item: " + JDB.SolveStr(IdentifiableItemNamePath) +  ", count: " + JDB.SolveInt(IdentifiableItemCountPath)) ;DEBUG
             CurrContainer.RemoveItem(IdentifiableItem) ;; Remove it
             NCurrContainerIdentifiableItems += 1
