@@ -9,9 +9,11 @@ MiscObject Property _LUIIS_UnkWeapon auto
 Form[] CurrContainerItems
 int NCurrContainerIdentifiableItems ; Number of Identifiable Items in the current container
 int property NTotalIdentifiableItems auto ; Total number of identifiable items. Must persist bt saves
+String property NOrderIdentifiableItem auto 
 form property IdentifiableItem auto
 int Property IdentifiableItemArray auto
 int property NPlayerUnkItems1 auto
+int Property NTotalLootedItems = 0 auto
 
 function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
 
@@ -30,13 +32,17 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
         if CurrContainerItems[j].HasKeyword(_LUIIS_IsIdentifiable) ;; if its identifiable
             IdentifiableItem = CurrContainerItems[j]
             JArray.addForm(IdentifiableItemArray,IdentifiableItem)
-            JFormDB.setStr(IdentifiableItem,"._LUIIS_IdentifiableItems.name", IdentifiableItem.GetName())
-            JFormDB.setInt(IdentifiableItem, "._LUIIS_IdentifiableItems.count", CurrContainer.GetItemCount(CurrContainerItems[j])) ; update persistent db
-            Debug.Notification("Current identifiable item: " + JFormDB.GetStr(IdentifiableItem,"._LUIIS_IdentifiableItems.name") +  ", count: " + JFormDB.GetInt(IdentifiableItem,"._LUIIS_IdentifiableItems.count")) ;DEBUG
+            NTotalIdentifiableItems += 1
+            String IdentifiableItemNamePath = "._LUIIS_IdentifiableItem" + NTotalIdentifiableItems + ".name"
+            String IdentifiableItemCountPath = "._LUIIS_IdentifiableItem" + NTotalIdentifiableItems + ".count"
+
+            ;Debug.Notification("Path: " + IdentifiableItemNamePath) ;;  DEBUG
+            JDB.solveStrSetter(IdentifiableItemNamePath, IdentifiableItem.GetName(), true) ;  its name
+            JDB.solveIntSetter(IdentifiableItemCountPath, CurrContainer.GetItemCount(IdentifiableItem), true) ; its count
+            Debug.Notification("Current identifiable item: " + JDB.SolveStr(IdentifiableItemNamePath) +  ", count: " + JDB.SolveInt(IdentifiableItemCountPath)) ;DEBUG
             CurrContainer.RemoveItem(IdentifiableItem) ;; Remove it
             NCurrContainerIdentifiableItems += 1
-            NTotalIdentifiableItems += 1 ;DEBUG
-            
+
         endif
 
         j += 1

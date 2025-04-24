@@ -16,20 +16,21 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
         ;Debug.Notification("NPlayerUnkItems2 (after looting): " + NPlayerUnkItems2)
         ;Debug.Notification("LootedStackUnits: " + LootedStackUnits)
         Form LastIdentifiableItem = ItemSwapper.IdentifiableItem
-
+        String IdentifiableItemLootedPath = "._LUIIS_IdentifiableItem" + ItemSwapper.NTotalIdentifiableItems + ".looted"
         if LootedStackUnits == 1 ; looted one unit, not a stack
             Debug.Notification("Didnt loot a Stack") ; DEBUG
-            JFormDB.solveIntSetter(LastIdentifiableItem,"._LUIIS_IdentifiableItems.looted", 1, true) ; add "looted" to last identified item that was transformed.
-            Debug.Notification("Last looted identifiable item: " + LastIdentifiableItem.GetName() + ", .looted: " + JFormDB.Getint(LastIdentifiableItem, "._LUIIS_IdentifiableItems.looted"))
+            JDB.solveIntSetter(IdentifiableItemLootedPath, 1, true) ; add "looted" to last identified item that was transformed.
+            Debug.Notification("Last looted identifiable item: " + LastIdentifiableItem.GetName() + ", looted: " + JDB.SolveInt(IdentifiableItemLootedPath))
         elseif LootedStackUnits > 1 ;looted a stack
             Debug.Notification("LOOTED a Stack") ; DEBUG
             int i = 0
             while i < LootedStackUnits ; travel the whole looted stack
                 LastIdentifiableItem = JArray.GetForm(ItemSwapper.IdentifiableItemArray,i) ; to each identifiable (now looted) item
-                JFormDB.solveIntSetter(LastIdentifiableItem,"._LUIIS_IdentifiableItems.looted", 1, true) ; add "looted" to last identified item that was transformed.
-                Debug.Notification("Last looted identifiable item: " + LastIdentifiableItem.GetName() + ", .looted: " + JFormDB.Getint(LastIdentifiableItem, "._LUIIS_IdentifiableItems.looted"))
+                JDB.solveIntSetter(IdentifiableItemLootedPath, 1, true) ; add "looted" to last identified item that was transformed.
+                Debug.Notification("Last looted identifiable item: " + LastIdentifiableItem.GetName() + ", looted: " + JDB.SolveInt(IdentifiableItemLootedPath))
                 i+=1
             endwhile
+            ItemSwapper.NTotalLootedItems+=LootedStackUnits
         endif
 
 
