@@ -88,7 +88,7 @@ endEvent
 Event OnMenuClose(String MenuName) ;; When closing a container DEBUG
     ;Debug.Notification("Closed a container")
 
-
+    Utility.Wait(2)
     JArray.clear(IdentifiableItemArray) ; reset
 
 
