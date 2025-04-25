@@ -4,6 +4,7 @@ Scriptname LUIIS_IdentificationSys extends activemagiceffect
 Actor Property PlayerRef auto
 MiscObject Property _LUIIS_UnkWeapon auto
 LUIIS_ItemSwapper Property ItemSwapper auto
+Scroll Property _LUIIS_IdScroll auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
     if(akTarget == PlayerRef)
@@ -22,6 +23,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
             ItemSwapper.DBBlock = TRUE ; block the db until you loot again
         Else
             Debug.Notification("You already identified all pending items")
+            PlayerRef.AddItem(_LUIIS_IdScroll,1,true) ; readds so you dont waste it
         endif
     endif
 EndEvent
