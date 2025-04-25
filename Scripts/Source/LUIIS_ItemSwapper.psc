@@ -8,7 +8,7 @@ MiscObject Property _LUIIS_UnkWeapon auto
 
 Form[] CurrContainerItems
 int NCurrcontainerSingleIdentifiableItems ; Number of Identifiable Items in the current container
-int property NTotalSingleIdentifiableItems auto ; Total number of SINGLE identifiable items = entries in db. Must persist bt saves. Determines the order of entries
+int property NTotaldentifiableItemsEntries auto ; Total number of SINGLE identifiable items = entries in db. Must persist bt saves. Determines the order of entries
 String property NOrderIdentifiableItem auto 
 form property IdentifiableItem auto
 int Property IdentifiableItemArray auto
@@ -35,10 +35,10 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
                 IdentifiableItem = CurrContainerItems[j]
                 IdentifiableItemCount = CurrContainer.GetItemCount(IdentifiableItem)
                 JArray.addForm(IdentifiableItemArray,IdentifiableItem)
-                NTotalSingleIdentifiableItems += 1
-                String IdentifiableItemNamePath = "._LUIIS_IdentifiableItem" + NTotalSingleIdentifiableItems + ".name"
-                String IdentifiableItemCountPath = "._LUIIS_IdentifiableItem" + NTotalSingleIdentifiableItems + ".count"
-                String IdentifiableItemFormPath = "._LUIIS_IdentifiableItem" + NTotalSingleIdentifiableItems + ".form"
+                NTotaldentifiableItemsEntries += 1
+                String IdentifiableItemNamePath = "._LUIIS_IdentifiableItem" + NTotaldentifiableItemsEntries + ".name"
+                String IdentifiableItemCountPath = "._LUIIS_IdentifiableItem" + NTotaldentifiableItemsEntries + ".count"
+                String IdentifiableItemFormPath = "._LUIIS_IdentifiableItem" + NTotaldentifiableItemsEntries + ".form"
                 ;Debug.Notification("Path: " + IdentifiableItemNamePath) ;;  DEBUG
                 JDB.solveStrSetter(IdentifiableItemNamePath, IdentifiableItem.GetName(), true) ;  its name
                 JDB.solveIntSetter(IdentifiableItemCountPath,IdentifiableItemCount , true) ; its count
@@ -55,7 +55,7 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
         endwhile
 
         CurrContainer.AddItem(_LUIIS_UnkWeapon, NCurrcontainerSingleIdentifiableItems) ;; Add as many Unidentified items to the container as Identifiable were in the same container
-        Debug.Notification("NTotalSingleIdentifiableItems: " + NTotalSingleIdentifiableItems) ; DEBUG
+        Debug.Notification("NTotaldentifiableItemsEntries: " + NTotaldentifiableItemsEntries) ; DEBUG
     endif
 endfunction
 
