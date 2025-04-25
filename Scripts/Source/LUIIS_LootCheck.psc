@@ -16,7 +16,7 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
         ;Debug.Notification("NPlayerUnkItems2 (after looting): " + NPlayerUnkItems2)
         ;Debug.Notification("LootedStackUnits: " + LootedStackUnits)
         Form LastIdentifiableItem = ItemSwapper.IdentifiableItem
-        String IdentifiableItemLootedPath = "._LUIIS_IdentifiableItem" + ItemSwapper.NTotalIdentifiableItems + ".looted"
+        String IdentifiableItemLootedPath = "._LUIIS_IdentifiableItem" + ItemSwapper.NTotalSingleIdentifiableItems + ".looted"
         if LootedStackUnits == 1 ; looted one unit, not a stack
             Debug.Notification("Didnt loot a Stack") ; DEBUG
             JDB.solveIntSetter(IdentifiableItemLootedPath, 1, true) ; add "looted" to last identified item that was transformed.
