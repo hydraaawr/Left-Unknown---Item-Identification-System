@@ -14,7 +14,7 @@ form property IdentifiableItem auto
 int Property IdentifiableItemArray auto
 int property NPlayerUnkItems1 auto
 int Property NTotalLootedItems = 0 auto
-bool Property DBBlock = False auto ;  used for resetting the db when using the identification system
+bool Property DBBlock = TRUE auto ;  used for resetting the db when using the identification system
 int IdentifiableItemCount
 
 function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
