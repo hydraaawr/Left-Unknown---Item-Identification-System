@@ -11,7 +11,8 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         int i = 0
         While (i < ItemSwapper.NTotalLootedItems)
             form TargetIdentifiableItem = JDB.SolveForm("._LUIIS_IdentifiableItem" + i + ".form")
-            PlayerRef.AddItem(TargetIdentifiableItem)
+            int TargetIdentifiableItemCount = JDB.solveInt("._LUIIS_IdentifiableItem" + i + ".count")
+            PlayerRef.AddItem(TargetIdentifiableItem, TargetIdentifiableItemCount)
             i+=1
         EndWhile
     endif
