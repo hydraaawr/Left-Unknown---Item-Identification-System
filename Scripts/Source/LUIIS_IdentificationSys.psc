@@ -7,13 +7,21 @@ LUIIS_ItemSwapper Property ItemSwapper auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
     if(akTarget == PlayerRef)
-        PlayerRef.RemoveItem(_LUIIS_UnkWeapon, PlayerRef.GetItemCount(_LUIIS_UnkWeapon)) ; Remove all unidentified items
-        int i = 0
-        While (i < ItemSwapper.NTotalLootedItems)
-            form TargetIdentifiableItem = JDB.SolveForm("._LUIIS_IdentifiableItem" + i + ".form")
-            int TargetIdentifiableItemCount = JDB.solveInt("._LUIIS_IdentifiableItem" + i + ".count")
-            PlayerRef.AddItem(TargetIdentifiableItem, TargetIdentifiableItemCount)
-            i+=1
-        EndWhile
+        if(ItemSwapper.DBBlock == FALSE)
+            PlayerRef.RemoveItem(_LUIIS_UnkWeapon, PlayerRef.GetItemCount(_LUIIS_UnkWeapon)) ; Remove all unidentified items
+            int i = 0
+            While (i < ItemSwapper.NTotalLootedItems)
+                form TargetIdentifiableItem = JDB.SolveForm("._LUIIS_IdentifiableItem" + i + ".form")
+                int TargetIdentifiableItemCount = JDB.solveInt("._LUIIS_IdentifiableItem" + i + ".count")
+                PlayerRef.AddItem(TargetIdentifiableItem, TargetIdentifiableItemCount)
+                i+=1
+            EndWhile
+            ;; after returning all the identified items
+            ItemSwapper.NTotaldentifiableItemEntries = 0 ; resets the db index (will start to overwrite from 0)
+            ItemSwapper.NTotalLootedItems = 0 
+            ItemSwapper.DBBlock = TRUE ; block the db until you loot again
+        Else
+            Debug.Notification("You already identified all pending items")
+        endif
     endif
 EndEvent

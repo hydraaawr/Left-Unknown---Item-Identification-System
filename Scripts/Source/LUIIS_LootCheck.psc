@@ -8,7 +8,7 @@ MiscObject Property _LUIIS_UnkWeapon auto
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
     if(akNewContainer == PlayerRef) ;if player looted it
         
-        Debug.Notification("Player Looted Unidentified Item(s)")
+        ;Debug.Notification("Player Looted Unidentified Item(s)")
         
         int NPlayerUnkItems2 =  PlayerRef.GetItemCount(_LUIIS_UnkWeapon) ; current unknown items in player inventory
         int LootedUnkStackUnits = NPlayerUnkItems2 - ItemSwapper.NPlayerUnkItems1 ; size of the looted unidentified item stack
@@ -16,7 +16,7 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
         ;Debug.Notification("NPlayerUnkItems2 (after looting): " + NPlayerUnkItems2)
         ;Debug.Notification("LootedUnkStackUnits: " + LootedUnkStackUnits)
         Form LastIdentifiableItem = ItemSwapper.IdentifiableItem
-        String IdentifiableItemLootedPath = "._LUIIS_IdentifiableItem" + ItemSwapper.NTotaldentifiableItemsEntries + ".looted"
+        String IdentifiableItemLootedPath = "._LUIIS_IdentifiableItem" + ItemSwapper.NTotaldentifiableItemEntries + ".looted"
         if LootedUnkStackUnits == 1 ; looted one unit, not a stack of unidentified items
             Debug.Notification("Didnt loot a Stack") ; DEBUG
             JDB.solveIntSetter(IdentifiableItemLootedPath, 1, true) ; add "looted" to last identified item that was transformed.
@@ -34,7 +34,7 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
         endif
 
 
-
+        ItemSwapper.DBBlock = FALSE
 
     endif
 EndEvent

@@ -8,12 +8,13 @@ MiscObject Property _LUIIS_UnkWeapon auto
 
 Form[] CurrContainerItems
 int NCurrcontainerSingleIdentifiableItems ; Number of Identifiable Items in the current container
-int property NTotaldentifiableItemsEntries auto ; Total number of SINGLE identifiable items = entries in db. Must persist bt saves. Determines the order of entries
+int property NTotaldentifiableItemEntries auto ; Total number of SINGLE identifiable items = entries in db. Must persist bt saves. Determines the order of entries
 String property NOrderIdentifiableItem auto 
 form property IdentifiableItem auto
 int Property IdentifiableItemArray auto
 int property NPlayerUnkItems1 auto
 int Property NTotalLootedItems = 0 auto
+bool Property DBBlock = False auto ;  used for resetting the db when using the identification system
 int IdentifiableItemCount
 
 function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
@@ -35,15 +36,15 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
                 IdentifiableItem = CurrContainerItems[j]
                 IdentifiableItemCount = CurrContainer.GetItemCount(IdentifiableItem)
                 JArray.addForm(IdentifiableItemArray,IdentifiableItem)
-                NTotaldentifiableItemsEntries += 1
-                String IdentifiableItemNamePath = "._LUIIS_IdentifiableItem" + NTotaldentifiableItemsEntries + ".name"
-                String IdentifiableItemCountPath = "._LUIIS_IdentifiableItem" + NTotaldentifiableItemsEntries + ".count"
-                String IdentifiableItemFormPath = "._LUIIS_IdentifiableItem" + NTotaldentifiableItemsEntries + ".form"
+                NTotaldentifiableItemEntries += 1
+                String IdentifiableItemNamePath = "._LUIIS_IdentifiableItem" + NTotaldentifiableItemEntries + ".name"
+                String IdentifiableItemCountPath = "._LUIIS_IdentifiableItem" + NTotaldentifiableItemEntries + ".count"
+                String IdentifiableItemFormPath = "._LUIIS_IdentifiableItem" + NTotaldentifiableItemEntries + ".form"
                 ;Debug.Notification("Path: " + IdentifiableItemNamePath) ;;  DEBUG
                 JDB.solveStrSetter(IdentifiableItemNamePath, IdentifiableItem.GetName(), true) ;  its name
                 JDB.solveIntSetter(IdentifiableItemCountPath,IdentifiableItemCount , true) ; its count
                 JDB.solveFormSetter(IdentifiableItemFormPath, IdentifiableItem, true) ; its form
-                Debug.Notification("Current identifiable item: " + JDB.SolveStr(IdentifiableItemNamePath) +  ", count: " + JDB.SolveInt(IdentifiableItemCountPath)) ;DEBUG
+                ;Debug.Notification("Current identifiable item: " + JDB.SolveStr(IdentifiableItemNamePath) +  ", count: " + JDB.SolveInt(IdentifiableItemCountPath)) ;DEBUG
                 CurrContainer.RemoveItem(IdentifiableItem,IdentifiableItemCount) ;; Remove it
                 NCurrcontainerSingleIdentifiableItems += 1
 
@@ -55,7 +56,7 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
         endwhile
 
         CurrContainer.AddItem(_LUIIS_UnkWeapon, NCurrcontainerSingleIdentifiableItems) ;; Add as many Unidentified items to the container as Identifiable were in the same container
-        Debug.Notification("NTotaldentifiableItemsEntries: " + NTotaldentifiableItemsEntries) ; DEBUG
+        Debug.Notification("NTotaldentifiableItemEntries: " + NTotaldentifiableItemEntries) ; DEBUG
     endif
 endfunction
 
