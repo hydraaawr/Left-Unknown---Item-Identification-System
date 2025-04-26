@@ -13,6 +13,7 @@ String property NOrderIdentifiableItem auto
 form property IdentifiableItem auto
 int Property IdentifiableItemArray auto
 int property NPlayerUnkItems1 auto
+int Property LootedUnkStackUnits = 0 auto
 int Property NTotalLootedItems = 0 auto
 bool Property DBBlock = TRUE auto ;  used for resetting the db when using the identification system
 int IdentifiableItemCount

@@ -9,7 +9,8 @@ Scroll Property _LUIIS_IdScroll auto
 Event OnEffectStart(Actor akTarget, Actor akCaster)
     if(akTarget == PlayerRef)
         if(ItemSwapper.DBBlock == FALSE)
-            PlayerRef.RemoveItem(_LUIIS_UnkWeapon, PlayerRef.GetItemCount(_LUIIS_UnkWeapon)) ; Remove all unidentified items
+            int LootedUnkStackUnits = ItemSwapper.LootedUnkStackUnits
+            PlayerRef.RemoveItem(_LUIIS_UnkWeapon, LootedUnkStackUnits) ; Remove all looted unidentified items
             int i = 0
             While (i < ItemSwapper.NTotalLootedItems)
                 form TargetIdentifiableItem = JDB.SolveForm("._LUIIS_IdentifiableItem" + i + ".form")
