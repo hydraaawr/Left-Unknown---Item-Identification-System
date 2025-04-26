@@ -30,10 +30,10 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
                 Debug.Notification("Last looted identifiable item: " + LastIdentifiableItem.GetName() + ", looted: " + JDB.SolveInt(IdentifiableItemLootedPath))
                 i+=1
             endwhile
-            ItemSwapper.NTotalLootedItems+=LootedUnkStackUnits
+            
         endif
 
-
+        ItemSwapper.NTotalLootedItems+=LootedUnkStackUnits
         ItemSwapper.DBBlock = FALSE
 
     endif
