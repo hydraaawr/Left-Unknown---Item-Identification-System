@@ -6,47 +6,45 @@ Keyword Property _LUIIS_IsIdentifiable auto
 MiscObject Property _LUIIS_UnkWeapon auto
 
 
-Form[] CurrContainerItems
-int NCurrcontainerSingleIdentifiableItems ; Number of Identifiable Items in the current container
-int property NTotaldentifiableItemEntries auto ; Total number of SINGLE identifiable items = entries in db. Must persist bt saves. Determines the order of entries
-String property NOrderIdentifiableItem auto 
-form property IdentifiableItem auto
-int Property IdentifiableItemArray auto
+Form[] ThisContainerItems
+int NThisContainerSingleIdentifiableItems ; Number of Identifiable Items in the current container
+int property NTotalIdentifiableItemEntries auto ; Total number of SINGLE identifiable items = entries in db. Must persist bt saves. Determines the order of entries
+form property CurrIdentifiableItem auto
+int Property IdentifiableItemArray auto ; DEBUG temporal parallel db of forms
 int property NPlayerUnkItems1 auto
-int Property NTotalLootedItems = 0 auto
 bool Property DBBlock = TRUE auto ;  used for resetting the db when using the identification system
-int IdentifiableItemCount
+int CurrIdentifiableItemCount
 
 function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
 
-    ObjectReference CurrContainer = Game.GetCurrentCrosshairRef() ; target the container inventory with the crosshair. Inspired by Nerapharu's comment at: https://www.nexusmods.com/skyrimspecialedition/mods/120152?tab=posts&BH=1
+    ObjectReference ThisContainer = Game.GetCurrentCrosshairRef() ; target the container inventory with the crosshair. Inspired by Nerapharu's comment at: https://www.nexusmods.com/skyrimspecialedition/mods/120152?tab=posts&BH=1
     
-    if((CurrContainer as Actor).IsDead() || (CurrContainer as Actor).GetActorBase() == None) ; only works if player is looting corpses/chests
-        NCurrcontainerSingleIdentifiableItems = 0; reset
+    if((ThisContainer as Actor).IsDead() || (ThisContainer as Actor).GetActorBase() == None) ; only works if player is looting corpses/chests
+        NThisContainerSingleIdentifiableItems = 0; reset
 
-        CurrContainerItems = CurrContainer.GetContainerForms() ; Saves the current container whole content in array. No need to initialize, this function already does it
+        ThisContainerItems = ThisContainer.GetContainerForms() ; Saves the current container whole content in array. No need to initialize, this function already does it
 
-        IdentifiableItemArray = JArray.object() ;temporal parallel db of forms
+        IdentifiableItemArray = JArray.object() ; DEBUG
 
         ;; Replacement ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         int j = 0
-        while j < CurrContainerItems.Length ;; travel the whole content
+        while j < ThisContainerItems.Length ;; travel the whole content
 
-            if CurrContainerItems[j].HasKeyword(_LUIIS_IsIdentifiable) ;; if its identifiable
-                IdentifiableItem = CurrContainerItems[j]
-                IdentifiableItemCount = CurrContainer.GetItemCount(IdentifiableItem)
-                JArray.addForm(IdentifiableItemArray,IdentifiableItem)
-                NTotaldentifiableItemEntries += 1
-                String IdentifiableItemNamePath = "._LUIIS_IdentifiableItem" + NTotaldentifiableItemEntries + ".name"
-                String IdentifiableItemCountPath = "._LUIIS_IdentifiableItem" + NTotaldentifiableItemEntries + ".count"
-                String IdentifiableItemFormPath = "._LUIIS_IdentifiableItem" + NTotaldentifiableItemEntries + ".form"
+            if ThisContainerItems[j].HasKeyword(_LUIIS_IsIdentifiable) ;; if its identifiable
+                CurrIdentifiableItem = ThisContainerItems[j]
+                CurrIdentifiableItemCount = ThisContainer.GetItemCount(CurrIdentifiableItem)
+                JArray.addForm(IdentifiableItemArray,CurrIdentifiableItem) ; DEBUG
+                String CurrIdentifiableItemEntryNamePath = "._LUIIS_IdentifiableItemEntry" + NTotalIdentifiableItemEntries + ".name"
+                String CurrIdentifiableItemEntryCountPath = "._LUIIS_IdentifiableItemEntry" + NTotalIdentifiableItemEntries + ".count"
+                String CurrIdentifiableItemEntryFormPath = "._LUIIS_IdentifiableItemEntry" + NTotalIdentifiableItemEntries + ".form"
                 ;Debug.Notification("Path: " + IdentifiableItemNamePath) ;;  DEBUG
-                JDB.solveStrSetter(IdentifiableItemNamePath, IdentifiableItem.GetName(), true) ;  its name
-                JDB.solveIntSetter(IdentifiableItemCountPath,IdentifiableItemCount , true) ; its count
-                JDB.solveFormSetter(IdentifiableItemFormPath, IdentifiableItem, true) ; its form
+                JDB.solveStrSetter(CurrIdentifiableItemEntryNamePath, CurrIdentifiableItem.GetName(), true) ;  its name
+                JDB.solveIntSetter(CurrIdentifiableItemEntryCountPath,CurrIdentifiableItemCount , true) ; its count
+                JDB.solveFormSetter(CurrIdentifiableItemEntryFormPath, CurrIdentifiableItem, true) ; its form
                 ;Debug.Notification("Current identifiable item: " + JDB.SolveStr(IdentifiableItemNamePath) +  ", count: " + JDB.SolveInt(IdentifiableItemCountPath)) ;DEBUG
-                CurrContainer.RemoveItem(IdentifiableItem,IdentifiableItemCount) ;; Remove it
-                NCurrcontainerSingleIdentifiableItems += 1
+                ThisContainer.RemoveItem(CurrIdentifiableItem,CurrIdentifiableItemCount) ;; Remove it
+                NThisContainerSingleIdentifiableItems += 1
+                NTotalIdentifiableItemEntries += 1
 
             endif
 
@@ -55,8 +53,8 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
 
         endwhile
 
-        CurrContainer.AddItem(_LUIIS_UnkWeapon, NCurrcontainerSingleIdentifiableItems) ;; Add as many Unidentified items to the container as Identifiable were in the same container
-        Debug.Notification("NTotaldentifiableItemEntries: " + NTotaldentifiableItemEntries) ; DEBUG
+        ThisContainer.AddItem(_LUIIS_UnkWeapon, NThisContainerSingleIdentifiableItems) ;; Add as many Unidentified items to the container as Identifiable were in the same container
+        Debug.Notification("NTotalIdentifiableItemEntries: " + NTotalIdentifiableItemEntries) ; DEBUG
     endif
 endfunction
 
@@ -92,7 +90,7 @@ Event OnMenuClose(String MenuName) ;; When closing a container DEBUG
     ;Debug.Notification("Closed a container")
 
     Utility.Wait(2)
-    JArray.clear(IdentifiableItemArray) ; reset
+    ;JArray.clear(IdentifiableItemArray) ; reset
 
 
 Endevent
