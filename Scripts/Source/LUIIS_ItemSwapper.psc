@@ -24,7 +24,7 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
 
         ThisContainerItems = ThisContainer.GetContainerForms() ; Saves the current container whole content in array. No need to initialize, this function already does it
 
-        IdentifiableItemArray = JArray.object() ; DEBUG
+        IdentifiableItemArray = JArray.object() ; DEBUG, it creates/resets the array
 
         ;; Replacement ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         int j = 0
@@ -85,12 +85,3 @@ Event OnMenuOpen(String MenuName) ;; When opening a container
 
 endEvent
 
-
-Event OnMenuClose(String MenuName) ;; When closing a container DEBUG
-    ;Debug.Notification("Closed a container")
-
-    Utility.Wait(2)
-    ;JArray.clear(IdentifiableItemArray) ; reset
-
-
-Endevent
