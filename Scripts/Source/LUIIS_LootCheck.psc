@@ -6,15 +6,15 @@ LUIIS_ItemSwapper Property ItemSwapper auto
 MiscObject Property _LUIIS_UnkWeapon auto
 
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
-    if(akNewContainer == PlayerRef) ;if player looted it
+    if(akOldContainer != PlayerRef && akNewContainer == PlayerRef && ItemSwapper.TradeBlock == FALSE) ;if player looted it and you are looting for the first time (thats why the block should be down)
         
         ;Debug.Notification("Player Looted Unidentified Item(s)")
         
         int NPlayerUnkItems2 =  PlayerRef.GetItemCount(_LUIIS_UnkWeapon) ; current unknown items in player inventory
         int LootedUnkStackUnits = NPlayerUnkItems2 - ItemSwapper.NPlayerUnkItems1 ; size of the looted unidentified item stack
         int LootStartIndex = ItemSwapper.NTotalIdentifiableItemEntries - LootedUnkStackUnits
-        ;Debug.Notification("NPlayerUnkItems1 (before looting): " + ItemSwapper.NPlayerUnkItems1)
-        ;Debug.Notification("NPlayerUnkItems2 (after looting): " + NPlayerUnkItems2)
+        Debug.Notification("NPlayerUnkItems1 (before looting): " + ItemSwapper.NPlayerUnkItems1)
+        Debug.Notification("NPlayerUnkItems2 (after looting): " + NPlayerUnkItems2)
         ;Debug.Notification("LootedUnkStackUnits: " + LootedUnkStackUnits)
         String CurrIdentifiableItemEntryLootedPath
         Form LastIdentifiableItem = ItemSwapper.CurrIdentifiableItem
@@ -37,7 +37,7 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
             
         endif
 
-        ItemSwapper.DBBlock = FALSE
-
+        ItemSwapper.DBBlock = FALSE ; lets identification mechanic work again (because you have now pending loot to be identified)
+        ItemSwapper.TradeBlock = TRUE ; prevents from returning the uk item back after one loot
     endif
 EndEvent

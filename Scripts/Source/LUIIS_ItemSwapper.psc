@@ -13,6 +13,8 @@ form property CurrIdentifiableItem auto
 int Property IdentifiableItemArray auto ; DEBUG temporal parallel db of forms
 int property NPlayerUnkItems1 auto
 bool Property DBBlock = TRUE auto ;  used for resetting the db when using the identification system
+bool Property TradeBlock = FALSE auto ; prevents from returning the uk item back after one loot
+bool Property RemovalCheckBlock = FALSE auto  ; prevents removal from happening (in order not to collide identification and uk item removal mechanic)
 int CurrIdentifiableItemCount
 
 function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
@@ -71,6 +73,7 @@ Event OnInit()
     Debug.Notification("Left Unknown Initialized")
     RegisterForMenu("containerMenu")
     RegisterForMenu("LootMenu")
+    AddInventoryEventFilter(_LUIIS_UnkWeapon)
 EndEvent
 
 
@@ -85,3 +88,39 @@ Event OnMenuOpen(String MenuName) ;; When opening a container
 
 endEvent
 
+
+
+Event OnMenuClose(String MenuName) ;; When opening a container
+
+    if (MenuName == "LootMenu" || MenuName == "containerMenu") ; for both vanilla and quickloot compat
+        
+        TradeBlock = FALSE ; lets lootcheck work again when closing menu
+    endIf
+
+endEvent
+
+
+Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRef, ObjectReference akDestContainer)
+    
+    
+    if RemovalCheckBlock == FALSE
+        Debug.Notification("LUIIS: Removed Unidentified Item")
+        ; If dropped to the world (akDestContainer == None)
+        if akDestContainer == None && akItemRef
+            Utility.Wait(0.1) ; ensure ref is generated
+            akItemRef.Disable()  ; Disable the reference to prevent it from being used
+            akItemRef.Delete()   ; Remove the reference from the world
+            ;PlayerRef.AddItem(akBaseItem, aiItemCount) ; Add back to player's inventory
+            Debug.Notification("You cannot drop this item.")
+        
+        ; If moved to another container (e.g., vendor or chest)
+        elseif akDestContainer && akDestContainer != PlayerRef
+            Utility.Wait(0.1) ; avoid sync errors
+            ; Remove the item from the destination container (vendor/chest)
+            akDestContainer.RemoveItem(akBaseItem, aiItemCount)
+            ;PlayerRef.AddItem(akBaseItem, aiItemCount) ; Add back to player's inventory
+            Debug.Notification("This item cannot be moved.")
+        endif
+    endif
+    
+EndEvent
