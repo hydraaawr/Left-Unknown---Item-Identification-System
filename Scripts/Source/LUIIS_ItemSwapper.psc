@@ -110,7 +110,7 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRef,
             Utility.Wait(0.1) ; ensure ref is generated
             akItemRef.Disable()  ; Disable the reference to prevent it from being used
             akItemRef.Delete()   ; Remove the reference from the world
-            ;PlayerRef.AddItem(akBaseItem, aiItemCount) ; Add back to player's inventory
+            PlayerRef.AddItem(akBaseItem, aiItemCount) ; Add back to player's inventory
             Debug.Notification("You cannot drop this item.")
         
         ; If moved to another container (e.g., vendor or chest)
@@ -118,7 +118,7 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRef,
             Utility.Wait(0.1) ; avoid sync errors
             ; Remove the item from the destination container (vendor/chest)
             akDestContainer.RemoveItem(akBaseItem, aiItemCount)
-            ;PlayerRef.AddItem(akBaseItem, aiItemCount) ; Add back to player's inventory
+            PlayerRef.AddItem(akBaseItem, aiItemCount) ; Add back to player's inventory
             Debug.Notification("This item cannot be moved.")
         endif
     endif
