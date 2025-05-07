@@ -4,7 +4,7 @@ Scriptname LUIIS_ItemSwapper extends ReferenceAlias
 Actor Property PlayerRef auto
 Keyword Property _LUIIS_IsIdentifiable auto
 MiscObject Property _LUIIS_UnkWeapon auto
-
+ObjectReference Property ThisContainer auto
 
 Form[] ThisContainerItems
 int NThisContainerSingleIdentifiableItems ; Number of Identifiable Items in the current container
@@ -13,14 +13,13 @@ form property CurrIdentifiableItem auto
 int Property IdentifiableItemArray auto ; DEBUG temporal parallel db of forms
 int property NPlayerUnkItems1 auto
 bool Property DBBlock = TRUE auto ;  used for resetting the db when using the identification system
-bool Property TradeBlock = FALSE auto ; prevents from returning the uk item back after one loot
+bool Property TradeBlock = FALSE auto ; prevents from lootcheck activating when returning the uk item back after one loot and prevents double adding when item removal checking
 bool Property RemovalCheckBlock = FALSE auto  ; prevents removal from happening (in order not to collide identification and uk item removal mechanic)
 int CurrIdentifiableItemCount
 
 function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
 
-    ObjectReference ThisContainer = Game.GetCurrentCrosshairRef() ; target the container inventory with the crosshair. Inspired by Nerapharu's comment at: https://www.nexusmods.com/skyrimspecialedition/mods/120152?tab=posts&BH=1
-    
+    ThisContainer = Game.GetCurrentCrosshairRef() ; target the container inventory with the crosshair. Inspired by Nerapharu's comment at: https://www.nexusmods.com/skyrimspecialedition/mods/120152?tab=posts&BH=1
     if((ThisContainer as Actor).IsDead() || (ThisContainer as Actor).GetActorBase() == None) ; only works if player is looting corpses/chests
         NThisContainerSingleIdentifiableItems = 0; reset
 
@@ -62,8 +61,15 @@ endfunction
 
 
 
+function OrphanClean() ; orphans are unk items that were left in container because player partially turned them back to the container causing the absence of any db ref assigned to it. Must be cleansed
 
+    int NThisContainerOrphanUnkItems = ThisContainer.GetItemCount(_LUIIS_UnkWeapon)
+    if(NThisContainerOrphanUnkItems > 0)
+        ThisContainer.RemoveItem(_LUIIS_UnkWeapon,NThisContainerOrphanUnkItems)
+        PlayerRef.AddItem(_LUIIS_UnkWeapon,NThisContainerOrphanUnkItems,FALSE) ; readds them to player
+    endif
 
+endfunction
 
 
 
@@ -94,7 +100,9 @@ Event OnMenuClose(String MenuName) ;; When opening a container
 
     if (MenuName == "LootMenu" || MenuName == "containerMenu") ; for both vanilla and quickloot compat
         
-        TradeBlock = FALSE ; lets lootcheck work again when closing menu
+        TradeBlock = FALSE ; lets lootcheck work again when closing menu (necessary because at the end of lootcheck it locks)
+        OrphanClean() ; cleans orphans
+
     endIf
 
 endEvent
@@ -103,7 +111,7 @@ endEvent
 Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRef, ObjectReference akDestContainer)
     
     
-    if RemovalCheckBlock == FALSE
+    if RemovalCheckBlock == FALSE && TradeBlock == FALSE ; 1 prevents this from happening when performing identification, 2 prevents double adding when looting-turning back in same lootmenu (OrphanClean() complements this system)
         Debug.Notification("LUIIS: Removed Unidentified Item")
         ; If dropped to the world (akDestContainer == None)
         if akDestContainer == None && akItemRef
