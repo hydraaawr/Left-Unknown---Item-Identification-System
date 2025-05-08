@@ -26,7 +26,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
                 if(IsLooted == 1)
                     TargetIdentifiableItemEntry = JDB.SolveForm("._LUIIS_IdentifiableItemEntry" + i + ".form")
                     TargetIdentifiableItemEntryCount = JDB.solveInt("._LUIIS_IdentifiableItemEntry" + i + ".count")
-                    Debug.Notification("Entry " + i + " " + TargetIdentifiableItemEntry.GetName() + " LOOTED, count: " + TargetIdentifiableItemEntryCount)
+                    Debug.Notification("Identifiying entry " + i + " " + TargetIdentifiableItemEntry.GetName() + ", count: " + TargetIdentifiableItemEntryCount)
                     PlayerRef.AddItem(TargetIdentifiableItemEntry, TargetIdentifiableItemEntryCount)
                 Else
                     Debug.Notification("Entry " + i + " " + TargetIdentifiableItemEntry.GetName() + " not looted")

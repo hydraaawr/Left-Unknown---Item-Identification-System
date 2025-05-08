@@ -13,26 +13,28 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
         int NPlayerUnkItems2 =  PlayerRef.GetItemCount(_LUIIS_UnkWeapon) ; current unknown items in player inventory
         int LootedUnkStackUnits = NPlayerUnkItems2 - ItemSwapper.NPlayerUnkItems1 ; size of the looted unidentified item stack
         int LootStartIndex = ItemSwapper.NTotalIdentifiableItemEntries - LootedUnkStackUnits
-        Debug.Notification("NPlayerUnkItems1 (before looting): " + ItemSwapper.NPlayerUnkItems1)
-        Debug.Notification("NPlayerUnkItems2 (after looting): " + NPlayerUnkItems2)
+        ;Debug.Notification("NPlayerUnkItems1 (before looting): " + ItemSwapper.NPlayerUnkItems1)
+        ;Debug.Notification("NPlayerUnkItems2 (after looting): " + NPlayerUnkItems2)
         ;Debug.Notification("LootedUnkStackUnits: " + LootedUnkStackUnits)
         String CurrIdentifiableItemEntryLootedPath
+        String CurrIdentifiableItemEntryCountPath
         Form LastIdentifiableItem = ItemSwapper.CurrIdentifiableItem
         
         ;Debug.Notification("LOOTED a Stack") ; DEBUG
         int i = 0
         while i < LootedUnkStackUnits ; travel the whole looted stack
             LastIdentifiableItem = JArray.GetForm(ItemSwapper.IdentifiableItemArray,i) ; to each identifiable (now looted) item
-            Debug.Notification("LootStartIndex + i: " + (LootStartIndex + i))
+            Debug.Notification("Last looted item entry index: " + (LootStartIndex + i))
             CurrIdentifiableItemEntryLootedPath = "._LUIIS_IdentifiableItemEntry" + (LootStartIndex + i) + ".looted"
+            CurrIdentifiableItemEntryCountPath = "._LUIIS_IdentifiableItemEntry" + (LootStartIndex + i) + ".count"
             JDB.solveIntSetter(CurrIdentifiableItemEntryLootedPath, 1, true) ; add "looted" to last identified item that was transformed.
-            Debug.Notification("Last looted identifiable item entry: " + LastIdentifiableItem.GetName() + ", looted: " + JDB.SolveInt(CurrIdentifiableItemEntryLootedPath))
+            Debug.Notification("Last looted identifiable item entry: " + LastIdentifiableItem.GetName() + ", LootedState: " + JDB.SolveInt(CurrIdentifiableItemEntryLootedPath) + ", count: " + JDB.SolveInt(CurrIdentifiableItemEntryCountPath))
             i+=1
         endwhile
             
 
 
         ItemSwapper.DBBlock = FALSE ; lets identification mechanic work again (because you have now pending loot to be identified)
-        ItemSwapper.TradeBlock = TRUE ; prevents from returning the uk item back after one loot
+        ItemSwapper.TradeBlock = TRUE ; prevents from lootcheck activating when returning the uk item back after one loot
     endif
 EndEvent
