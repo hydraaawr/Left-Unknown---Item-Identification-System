@@ -16,6 +16,8 @@ bool Property DBBlock = TRUE auto ;  used for resetting the db when using the id
 bool Property TradeBlock = FALSE auto ; prevents from lootcheck activating when returning the uk item back after one loot and prevents double adding when item removal checking
 bool Property RemovalCheckBlock = FALSE auto  ; prevents removal from happening (in order not to collide identification and uk item removal mechanic)
 int CurrIdentifiableItemCount
+int NThisContainerOrphanUnkItems1
+int NThisContainerOrphanUnkItems2
 
 function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
 
@@ -61,13 +63,10 @@ endfunction
 
 
 
-function OrphanClean() ; orphans are unk items that were left in container because player partially turned them back to the container causing the absence of any db ref assigned to it. Must be cleansed
+function OrphanClean() ; orphans are unk items that were left in container because player partially turned them back on first opening of the container causing the absence of any db ref assigned to it. Must be cleansed
 
-    int NThisContainerOrphanUnkItems = ThisContainer.GetItemCount(_LUIIS_UnkWeapon)
-    if(NThisContainerOrphanUnkItems > 0)
-        ThisContainer.RemoveItem(_LUIIS_UnkWeapon,NThisContainerOrphanUnkItems)
-        PlayerRef.AddItem(_LUIIS_UnkWeapon,NThisContainerOrphanUnkItems,FALSE) ; readds them to player
-    endif
+    ThisContainer.RemoveItem(_LUIIS_UnkWeapon,NThisContainerOrphanUnkItems2)
+    PlayerRef.AddItem(_LUIIS_UnkWeapon,NThisContainerOrphanUnkItems2,FALSE) ; readds them to player
 
 endfunction
 
@@ -90,6 +89,8 @@ Event OnMenuOpen(String MenuName) ;; When opening a container
         ;Debug.Notification("Opened a container")
         IdentifiableSwap()
         NPlayerUnkItems1 = PlayerRef.GetItemCount(_LUIIS_UnkWeapon)
+        NThisContainerOrphanUnkItems1 = ThisContainer.GetItemCount(_LUIIS_UnkWeapon)
+
     endIf
 
 endEvent
@@ -101,7 +102,10 @@ Event OnMenuClose(String MenuName) ;; When opening a container
     if (MenuName == "LootMenu" || MenuName == "containerMenu") ; for both vanilla and quickloot compat
         
         TradeBlock = FALSE ; lets lootcheck work again when closing menu (necessary because at the end of lootcheck it locks)
-        OrphanClean() ; cleans orphans
+        NThisContainerOrphanUnkItems2 = ThisContainer.GetItemCount(_LUIIS_UnkWeapon)
+        if(NThisContainerOrphanUnkItems2 != NThisContainerOrphanUnkItems1) ;; only in case player manually removed it, not if he didnt loot anything
+            OrphanClean() ; cleans orphans
+        endif
 
     endIf
 
@@ -121,13 +125,6 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRef,
             PlayerRef.AddItem(akBaseItem, aiItemCount) ; Add back to player's inventory
             Debug.Notification("You cannot drop this item.")
         
-        ; If moved to another container (e.g., vendor or chest)
-        elseif akDestContainer && akDestContainer != PlayerRef
-            Utility.Wait(0.1) ; avoid sync errors
-            ; Remove the item from the destination container (vendor/chest)
-            akDestContainer.RemoveItem(akBaseItem, aiItemCount)
-            PlayerRef.AddItem(akBaseItem, aiItemCount) ; Add back to player's inventory
-            Debug.Notification("This item cannot be moved.")
         endif
     endif
     

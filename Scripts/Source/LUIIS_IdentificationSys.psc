@@ -8,7 +8,7 @@ Scroll Property _LUIIS_IdScroll auto
 
 form TargetIdentifiableItemEntry
 int TargetIdentifiableItemEntryCount
-int IsLooted
+
 
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
@@ -20,18 +20,12 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
             While (i < ItemSwapper.NTotalIdentifiableItemEntries)
                 TargetIdentifiableItemEntry = JDB.SolveForm("._LUIIS_IdentifiableItemEntry" + i + ".form")
                 TargetIdentifiableItemEntryCount = JDB.solveInt("._LUIIS_IdentifiableItemEntry" + i + ".count")
-                IsLooted = JDB.solveInt("._LUIIS_IdentifiableItemEntry" + i + ".looted")
-                ;Debug.Notification("IsLooted: " + IsLooted)
 
-                if(IsLooted == 1)
-                    TargetIdentifiableItemEntry = JDB.SolveForm("._LUIIS_IdentifiableItemEntry" + i + ".form")
-                    TargetIdentifiableItemEntryCount = JDB.solveInt("._LUIIS_IdentifiableItemEntry" + i + ".count")
-                    Debug.Notification("Identifiying entry " + i + " " + TargetIdentifiableItemEntry.GetName() + ", count: " + TargetIdentifiableItemEntryCount)
-                    PlayerRef.AddItem(TargetIdentifiableItemEntry, TargetIdentifiableItemEntryCount)
-                Else
-                    Debug.Notification("Entry " + i + " " + TargetIdentifiableItemEntry.GetName() + " not looted")
-                endif
-                
+                TargetIdentifiableItemEntry = JDB.SolveForm("._LUIIS_IdentifiableItemEntry" + i + ".form")
+                TargetIdentifiableItemEntryCount = JDB.solveInt("._LUIIS_IdentifiableItemEntry" + i + ".count")
+                Debug.Notification("Identifiying entry " + i + " " + TargetIdentifiableItemEntry.GetName() + ", count: " + TargetIdentifiableItemEntryCount)
+                PlayerRef.AddItem(TargetIdentifiableItemEntry, TargetIdentifiableItemEntryCount)
+
                 i+=1
             EndWhile
             ;; after returning all the identified items
