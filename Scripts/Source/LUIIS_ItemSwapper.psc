@@ -13,8 +13,8 @@ form property CurrIdentifiableItem auto
 int Property IdentifiableItemArray auto ; DEBUG temporal parallel db of forms
 int property NPlayerUnkItems1 auto
 bool Property DBBlock = TRUE auto ;  used for resetting the db when using the identification system
-bool Property TradeBlock = FALSE auto ; prevents from lootcheck activating when returning the uk item back after one loot and prevents double adding when item removal checking
-bool Property RemovalCheckBlock = FALSE auto  ; prevents removal from happening (in order not to collide identification and uk item removal mechanic)
+bool Property TradeBlock = FALSE auto ; prevents from lootcheck activating when dropping and readding unk item
+bool Property DropCheckBlock = FALSE auto  ; prevents removal from happening (in order not to collide identification and uk item drop check mechanic)
 int CurrIdentifiableItemCount
 int NThisContainerOrphanUnkItems1
 int NThisContainerOrphanUnkItems2
@@ -101,9 +101,8 @@ Event OnMenuClose(String MenuName) ;; When opening a container
 
     if (MenuName == "LootMenu" || MenuName == "containerMenu") ; for both vanilla and quickloot compat
         
-        TradeBlock = FALSE ; lets lootcheck work again when closing menu (necessary because at the end of lootcheck it locks)
         NThisContainerOrphanUnkItems2 = ThisContainer.GetItemCount(_LUIIS_UnkWeapon)
-        if(NThisContainerOrphanUnkItems2 != NThisContainerOrphanUnkItems1) ;; only in case player manually removed it, not if he didnt loot anything
+        if(NThisContainerOrphanUnkItems2 != NThisContainerOrphanUnkItems1) ;; only in case player manually partially removed the stack, not if he didnt loot anything
             OrphanClean() ; cleans orphans
         endif
 
@@ -115,17 +114,16 @@ endEvent
 Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRef, ObjectReference akDestContainer)
     
     
-    if RemovalCheckBlock == FALSE && TradeBlock == FALSE ; 1 prevents this from happening when performing identification, 2 prevents double adding when looting-turning back in same lootmenu (OrphanClean() complements this system)
+    if DropCheckBlock == FALSE && akDestContainer == None && akItemRef ; 1 prevents this from happening when performing identification and 2 dropped to the world (akDestContainer == None)
+
         Debug.Notification("LUIIS: Removed Unidentified Item")
-        ; If dropped to the world (akDestContainer == None)
-        if akDestContainer == None && akItemRef
-            Utility.Wait(0.1) ; ensure ref is generated
-            akItemRef.Disable()  ; Disable the reference to prevent it from being used
-            akItemRef.Delete()   ; Remove the reference from the world
-            PlayerRef.AddItem(akBaseItem, aiItemCount) ; Add back to player's inventory
-            Debug.Notification("You cannot drop this item.")
+        TradeBlock = TRUE
+        akItemRef.Disable()  ; Disable the reference to prevent it from being used
+        akItemRef.Delete()   ; Remove the reference from the world
+        PlayerRef.AddItem(akBaseItem, aiItemCount) ; Add back to player's inventory
+        Debug.Notification("You cannot drop this item.")
         
-        endif
+        TradeBlock = FALSE
     endif
     
 EndEvent

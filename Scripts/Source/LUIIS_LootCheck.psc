@@ -6,7 +6,7 @@ LUIIS_ItemSwapper Property ItemSwapper auto
 MiscObject Property _LUIIS_UnkWeapon auto
 
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
-    if(akOldContainer != PlayerRef && akNewContainer == PlayerRef && ItemSwapper.TradeBlock == FALSE) ;if player looted it and you are looting for the first time (thats why the block should be down)
+    if(akOldContainer != PlayerRef && akNewContainer == PlayerRef && ItemSwapper.TradeBlock == FALSE) ;if player looted it and you are not dropping and readding an item
         
         ;Debug.Notification("Player Looted Unidentified Item(s)")
         
@@ -31,6 +31,5 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
 
 
         ItemSwapper.DBBlock = FALSE ; lets identification mechanic work again (because you have now pending loot to be identified)
-        ItemSwapper.TradeBlock = TRUE ; prevents from lootcheck activating when returning the uk item back after one loot
     endif
 EndEvent
