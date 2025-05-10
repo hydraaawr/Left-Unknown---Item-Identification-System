@@ -11,8 +11,8 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
         ;Debug.Notification("Player Looted Unidentified Item(s)")
         
         int NPlayerUnkItems2 =  PlayerRef.GetItemCount(_LUIIS_UnkWeapon) ; current unknown items in player inventory
-        int LootedUnkStackUnits = NPlayerUnkItems2 - ItemSwapper.NPlayerUnkItems1 ; size of the looted unidentified item stack
-        int LootStartIndex = ItemSwapper.NTotalIdentifiableItemEntries - LootedUnkStackUnits
+        ItemSwapper.LootedUnkStackUnits = NPlayerUnkItems2 - ItemSwapper.NPlayerUnkItems1 ; size of the looted unidentified item stack
+        int LootStartIndex = ItemSwapper.NTotalIdentifiableItemEntries -  ItemSwapper.LootedUnkStackUnits
         ;Debug.Notification("NPlayerUnkItems1 (before looting): " + ItemSwapper.NPlayerUnkItems1)
         ;Debug.Notification("NPlayerUnkItems2 (after looting): " + NPlayerUnkItems2)
         ;Debug.Notification("LootedUnkStackUnits: " + LootedUnkStackUnits)
@@ -20,7 +20,7 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
         Form LastIdentifiableItem = ItemSwapper.CurrIdentifiableItem
         
         int i = 0
-        while i < LootedUnkStackUnits ; travel the whole looted stack
+        while i <  ItemSwapper.LootedUnkStackUnits ; travel the whole looted stack
             LastIdentifiableItem = JArray.GetForm(ItemSwapper.IdentifiableItemArray,i) ; to each identifiable (now looted) item
             Debug.Notification("Last looted item entry index: " + (LootStartIndex + i))
             CurrIdentifiableItemEntryCountPath = "._LUIIS_IdentifiableItemEntry" + (LootStartIndex + i) + ".count"

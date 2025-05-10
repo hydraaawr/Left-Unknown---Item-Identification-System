@@ -18,6 +18,8 @@ bool Property DropCheckBlock = FALSE auto  ; prevents removal from happening (in
 int CurrIdentifiableItemCount
 int NThisContainerOrphanUnkItems1
 int NThisContainerOrphanUnkItems2
+int Property LootedUnkStackUnits auto
+
 
 function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
 
@@ -102,7 +104,8 @@ Event OnMenuClose(String MenuName) ;; When opening a container
     if (MenuName == "LootMenu" || MenuName == "containerMenu") ; for both vanilla and quickloot compat
         
         NThisContainerOrphanUnkItems2 = ThisContainer.GetItemCount(_LUIIS_UnkWeapon)
-        if(NThisContainerOrphanUnkItems2 != NThisContainerOrphanUnkItems1) ;; only in case player manually partially removed the stack, not if he didnt loot anything
+        ;Debug.Notification("LootedUnkStackUnits: " + LootedUnkStackUnits)
+        if((NThisContainerOrphanUnkItems2 != NThisContainerOrphanUnkItems1) || (NThisContainerOrphanUnkItems2 == NThisContainerOrphanUnkItems1 && LootedUnkStackUnits != 0)) ;; only in case player manually turned back the stack, not if he didnt loot anything. 2 detects if player did loot something to prevent detecting a full stack turn back as a no loot at all
             TradeBlock = TRUE ; just in case
             OrphanClean() ; cleans orphans
             TradeBlock = FALSE 
