@@ -13,7 +13,7 @@ form property CurrIdentifiableItem auto
 int Property IdentifiableItemArray auto ; DEBUG temporal parallel db of forms
 int property NPlayerUnkItems1 auto
 bool Property DBBlock = TRUE auto ;  used for resetting the db when using the identification system
-bool Property TradeBlock = FALSE auto ; prevents from lootcheck activating when dropping and readding unk item
+bool Property TradeBlock = FALSE auto ; prevents lootcheck activating when readding unk item after removal (drop,  turn back to container)
 bool Property DropCheckBlock = FALSE auto  ; prevents removal from happening (in order not to collide identification and uk item drop check mechanic)
 int CurrIdentifiableItemCount
 int NThisContainerOrphanUnkItems1
@@ -103,7 +103,9 @@ Event OnMenuClose(String MenuName) ;; When opening a container
         
         NThisContainerOrphanUnkItems2 = ThisContainer.GetItemCount(_LUIIS_UnkWeapon)
         if(NThisContainerOrphanUnkItems2 != NThisContainerOrphanUnkItems1) ;; only in case player manually partially removed the stack, not if he didnt loot anything
+            TradeBlock = TRUE ; just in case
             OrphanClean() ; cleans orphans
+            TradeBlock = FALSE 
         endif
 
     endIf
