@@ -10,7 +10,6 @@ Form[] ThisContainerItems
 int NThisContainerSingleIdentifiableItems ; Number of Identifiable Items in the current container
 int property NTotalIdentifiableItemEntries auto ; Total number of SINGLE identifiable items = entries in db. Must persist bt saves. Determines the order of entries
 form property CurrIdentifiableItem auto
-int Property IdentifiableItemArray auto ; DEBUG temporal parallel db of forms
 int property NPlayerUnkItems1 auto
 bool Property DBBlock = TRUE auto ;  used for resetting the db when using the identification system
 bool Property TradeBlock = FALSE auto ; prevents lootcheck activating when readding unk item after removal (drop,  turn back to container)
@@ -29,7 +28,6 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
 
         ThisContainerItems = ThisContainer.GetContainerForms() ; Saves the current container whole content in array. No need to initialize, this function already does it
 
-        IdentifiableItemArray = JArray.object() ; DEBUG, it creates/resets the array
 
         ;; Replacement ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         int j = 0
@@ -38,7 +36,6 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
             if ThisContainerItems[j].HasKeyword(_LUIIS_IsIdentifiable) ;; if its identifiable
                 CurrIdentifiableItem = ThisContainerItems[j]
                 CurrIdentifiableItemCount = ThisContainer.GetItemCount(CurrIdentifiableItem)
-                JArray.addForm(IdentifiableItemArray,CurrIdentifiableItem) ; DEBUG
                 String CurrIdentifiableItemEntryNamePath = "._LUIIS_IdentifiableItemEntry" + NTotalIdentifiableItemEntries + ".name"
                 String CurrIdentifiableItemEntryCountPath = "._LUIIS_IdentifiableItemEntry" + NTotalIdentifiableItemEntries + ".count"
                 String CurrIdentifiableItemEntryFormPath = "._LUIIS_IdentifiableItemEntry" + NTotalIdentifiableItemEntries + ".form"

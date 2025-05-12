@@ -15,16 +15,18 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
         int LootStartIndex = ItemSwapper.NTotalIdentifiableItemEntries -  ItemSwapper.LootedUnkStackUnits
         ;Debug.Notification("NPlayerUnkItems1 (before looting): " + ItemSwapper.NPlayerUnkItems1)
         ;Debug.Notification("NPlayerUnkItems2 (after looting): " + NPlayerUnkItems2)
-        ;Debug.Notification("LootedUnkStackUnits: " + LootedUnkStackUnits)
+        ;Debug.Notification("LootedUnkStackUnits: " + ItemSwapper.LootedUnkStackUnits)
+        String CurrIdentifiableItemEntryNamePath
         String CurrIdentifiableItemEntryCountPath
         Form LastIdentifiableItem = ItemSwapper.CurrIdentifiableItem
         
         int i = 0
         while i <  ItemSwapper.LootedUnkStackUnits ; travel the whole looted stack
-            LastIdentifiableItem = JArray.GetForm(ItemSwapper.IdentifiableItemArray,i) ; to each identifiable (now looted) item
-            Debug.Notification("Last looted item entry index: " + (LootStartIndex + i))
+
+            ;Debug.Notification("Last looted item entry index: " + (LootStartIndex + i))
+            CurrIdentifiableItemEntryNamePath = "._LUIIS_IdentifiableItemEntry" + (LootStartIndex + i) + ".name"
             CurrIdentifiableItemEntryCountPath = "._LUIIS_IdentifiableItemEntry" + (LootStartIndex + i) + ".count"
-            Debug.Notification("Last looted identifiable item entry: " + LastIdentifiableItem.GetName() + ", count: " + JDB.SolveInt(CurrIdentifiableItemEntryCountPath))
+            Debug.Notification("Last looted identifiable item entry: " + JDB.SolveStr(CurrIdentifiableItemEntryNamePath) + ", count: " + JDB.SolveInt(CurrIdentifiableItemEntryCountPath))
             i+=1
         endwhile
             
