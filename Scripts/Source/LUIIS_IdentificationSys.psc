@@ -2,7 +2,7 @@ Scriptname LUIIS_IdentificationSys extends activemagiceffect
 ; Author: Hydraaawr https://github.com/hydraaawr; https://www.nexusmods.com/users/83984133
 
 Actor Property PlayerRef auto
-MiscObject Property _LUIIS_UnkWeapon auto
+MiscObject Property _LUIIS_UnkItem auto
 LUIIS_ItemSwapper Property ItemSwapper auto
 Scroll Property _LUIIS_IdScroll auto
 
@@ -15,7 +15,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
     if(akTarget == PlayerRef)
         if(ItemSwapper.DBBlock == FALSE)
             ItemSwapper.DropCheckBlock = TRUE ; stop removal check during identiification process
-            PlayerRef.RemoveItem(_LUIIS_UnkWeapon, PlayerRef.GetItemCount(_LUIIS_UnkWeapon)) ; Remove all unidentified items
+            PlayerRef.RemoveItem(_LUIIS_UnkItem, PlayerRef.GetItemCount(_LUIIS_UnkItem)) ; Remove all unidentified items
             int i = 0
             While (i < ItemSwapper.NTotalIdentifiableItemEntries)
                 TargetIdentifiableItemEntry = JDB.SolveForm("._LUIIS_IdentifiableItemEntry" + i + ".form")

@@ -3,7 +3,7 @@ Scriptname LUIIS_LootCheck extends ObjectReference
 
 Actor Property PlayerRef auto
 LUIIS_ItemSwapper Property ItemSwapper auto
-MiscObject Property _LUIIS_UnkWeapon auto
+MiscObject Property _LUIIS_UnkItem auto
 int LootedUnkStackUnits
 
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
@@ -11,7 +11,7 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
         
         ;Debug.Notification("Player Looted Unidentified Item(s)")
         
-        int NPlayerUnkItems2 =  PlayerRef.GetItemCount(_LUIIS_UnkWeapon) ; current unknown items in player inventory
+        int NPlayerUnkItems2 =  PlayerRef.GetItemCount(_LUIIS_UnkItem) ; current unknown items in player inventory
         LootedUnkStackUnits = NPlayerUnkItems2 - ItemSwapper.NPlayerUnkItems1 ; size of the looted unidentified item stack
         int LootStartIndex = ItemSwapper.NTotalIdentifiableItemEntries -  LootedUnkStackUnits
         ;Debug.Notification("NPlayerUnkItems1 (before looting): " + ItemSwapper.NPlayerUnkItems1)

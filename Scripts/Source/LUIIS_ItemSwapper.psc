@@ -3,7 +3,7 @@ Scriptname LUIIS_ItemSwapper extends ReferenceAlias
 
 Actor Property PlayerRef auto
 Keyword Property _LUIIS_IsIdentifiable auto
-MiscObject Property _LUIIS_UnkWeapon auto
+MiscObject Property _LUIIS_UnkItem auto
 ObjectReference Property ThisContainer auto
 
 Form[] ThisContainerItems
@@ -54,7 +54,7 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
 
         endwhile
 
-        ThisContainer.AddItem(_LUIIS_UnkWeapon, NThisContainerSingleIdentifiableItems) ;; Add as many Unidentified items to the container as Identifiable were in the same container
+        ThisContainer.AddItem(_LUIIS_UnkItem, NThisContainerSingleIdentifiableItems) ;; Add as many Unidentified items to the container as Identifiable were in the same container
         
     endif
 endfunction
@@ -63,8 +63,8 @@ endfunction
 
 function OrphanClean() ; orphans are unk items that were left in container. They must be cleansed
 
-    ThisContainer.RemoveItem(_LUIIS_UnkWeapon,NThisContainerOrphanUnkItems2)
-    PlayerRef.AddItem(_LUIIS_UnkWeapon,NThisContainerOrphanUnkItems2,FALSE) ; readds them to player
+    ThisContainer.RemoveItem(_LUIIS_UnkItem,NThisContainerOrphanUnkItems2)
+    PlayerRef.AddItem(_LUIIS_UnkItem,NThisContainerOrphanUnkItems2,FALSE) ; readds them to player
 
 endfunction
 
@@ -76,7 +76,7 @@ Event OnInit()
     Debug.Notification("Left Unknown Initialized")
     RegisterForMenu("containerMenu")
     RegisterForMenu("LootMenu")
-    AddInventoryEventFilter(_LUIIS_UnkWeapon)
+    AddInventoryEventFilter(_LUIIS_UnkItem)
 EndEvent
 
 
@@ -86,8 +86,8 @@ Event OnMenuOpen(String MenuName) ;; When opening a container
     if (MenuName == "LootMenu" || MenuName == "containerMenu") ; for both vanilla and quickloot compat
         ;Debug.Notification("Opened a container")
         IdentifiableSwap()
-        NPlayerUnkItems1 = PlayerRef.GetItemCount(_LUIIS_UnkWeapon)
-        NThisContainerOrphanUnkItems1 = ThisContainer.GetItemCount(_LUIIS_UnkWeapon)
+        NPlayerUnkItems1 = PlayerRef.GetItemCount(_LUIIS_UnkItem)
+        NThisContainerOrphanUnkItems1 = ThisContainer.GetItemCount(_LUIIS_UnkItem)
 
     endIf
 
@@ -99,9 +99,9 @@ Event OnMenuClose(String MenuName) ;; When opening a container
 
     if (MenuName == "LootMenu" || MenuName == "containerMenu") ; for both vanilla and quickloot compat
         
-        NThisContainerOrphanUnkItems2 = ThisContainer.GetItemCount(_LUIIS_UnkWeapon)
+        NThisContainerOrphanUnkItems2 = ThisContainer.GetItemCount(_LUIIS_UnkItem)
 
-        if(ThisContainer.GetItemCount(_LUIIS_UnkWeapon) > 0) ; if player left any unk item in container
+        if(ThisContainer.GetItemCount(_LUIIS_UnkItem) > 0) ; if player left any unk item in container
             TradeBlock = TRUE ; just in case
             OrphanClean() ; cleans orphans
             TradeBlock = FALSE
