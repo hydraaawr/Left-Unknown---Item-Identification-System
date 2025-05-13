@@ -4,6 +4,7 @@ Scriptname LUIIS_LootCheck extends ObjectReference
 Actor Property PlayerRef auto
 LUIIS_ItemSwapper Property ItemSwapper auto
 MiscObject Property _LUIIS_UnkWeapon auto
+int LootedUnkStackUnits
 
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
     if(akOldContainer != PlayerRef && akNewContainer == PlayerRef && ItemSwapper.TradeBlock == FALSE) ;if player looted it and you are not dropping and readding an item
@@ -11,8 +12,8 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
         ;Debug.Notification("Player Looted Unidentified Item(s)")
         
         int NPlayerUnkItems2 =  PlayerRef.GetItemCount(_LUIIS_UnkWeapon) ; current unknown items in player inventory
-        ItemSwapper.LootedUnkStackUnits = NPlayerUnkItems2 - ItemSwapper.NPlayerUnkItems1 ; size of the looted unidentified item stack
-        int LootStartIndex = ItemSwapper.NTotalIdentifiableItemEntries -  ItemSwapper.LootedUnkStackUnits
+        LootedUnkStackUnits = NPlayerUnkItems2 - ItemSwapper.NPlayerUnkItems1 ; size of the looted unidentified item stack
+        int LootStartIndex = ItemSwapper.NTotalIdentifiableItemEntries -  LootedUnkStackUnits
         ;Debug.Notification("NPlayerUnkItems1 (before looting): " + ItemSwapper.NPlayerUnkItems1)
         ;Debug.Notification("NPlayerUnkItems2 (after looting): " + NPlayerUnkItems2)
         ;Debug.Notification("LootedUnkStackUnits: " + ItemSwapper.LootedUnkStackUnits)
@@ -21,7 +22,7 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
         Form LastIdentifiableItem = ItemSwapper.CurrIdentifiableItem
         
         int i = 0
-        while i <  ItemSwapper.LootedUnkStackUnits ; travel the whole looted stack
+        while i <  LootedUnkStackUnits ; travel the whole looted stack
 
             ;Debug.Notification("Last looted item entry index: " + (LootStartIndex + i))
             CurrIdentifiableItemEntryNamePath = "._LUIIS_IdentifiableItemEntry" + (LootStartIndex + i) + ".name"
@@ -30,7 +31,6 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
             i+=1
         endwhile
             
-
 
         ItemSwapper.DBBlock = FALSE ; lets identification mechanic work again (because you have now pending loot to be identified)
     endif

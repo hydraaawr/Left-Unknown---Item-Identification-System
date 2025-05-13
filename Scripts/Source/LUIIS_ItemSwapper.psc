@@ -17,7 +17,6 @@ bool Property DropCheckBlock = FALSE auto  ; prevents removal from happening (in
 int CurrIdentifiableItemCount
 int NThisContainerOrphanUnkItems1
 int NThisContainerOrphanUnkItems2
-int Property LootedUnkStackUnits auto
 
 
 function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
@@ -56,13 +55,13 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
         endwhile
 
         ThisContainer.AddItem(_LUIIS_UnkWeapon, NThisContainerSingleIdentifiableItems) ;; Add as many Unidentified items to the container as Identifiable were in the same container
-        Debug.Notification("NTotalIdentifiableItemEntries: " + NTotalIdentifiableItemEntries) ; DEBUG
+        
     endif
 endfunction
 
 
 
-function OrphanClean() ; orphans are unk items that were left in container because player partially turned them back on first opening of the container causing the absence of any db ref assigned to it. Must be cleansed
+function OrphanClean() ; orphans are unk items that were left in container. They must be cleansed
 
     ThisContainer.RemoveItem(_LUIIS_UnkWeapon,NThisContainerOrphanUnkItems2)
     PlayerRef.AddItem(_LUIIS_UnkWeapon,NThisContainerOrphanUnkItems2,FALSE) ; readds them to player
@@ -101,12 +100,13 @@ Event OnMenuClose(String MenuName) ;; When opening a container
     if (MenuName == "LootMenu" || MenuName == "containerMenu") ; for both vanilla and quickloot compat
         
         NThisContainerOrphanUnkItems2 = ThisContainer.GetItemCount(_LUIIS_UnkWeapon)
-        ;Debug.Notification("LootedUnkStackUnits: " + LootedUnkStackUnits)
-        if((NThisContainerOrphanUnkItems2 != NThisContainerOrphanUnkItems1) || (NThisContainerOrphanUnkItems2 == NThisContainerOrphanUnkItems1 && LootedUnkStackUnits != 0)) ;; only in case player manually turned back the stack, not if he didnt loot anything. 2 detects if player did loot something to prevent detecting a full stack turn back as a no loot at all
+
+        if(ThisContainer.GetItemCount(_LUIIS_UnkWeapon) > 0) ; if player left any unk item in container
             TradeBlock = TRUE ; just in case
             OrphanClean() ; cleans orphans
-            TradeBlock = FALSE 
+            TradeBlock = FALSE
         endif
+
 
     endIf
 
