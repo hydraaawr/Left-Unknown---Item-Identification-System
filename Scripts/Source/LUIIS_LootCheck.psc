@@ -16,7 +16,7 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
         int LootStartIndex = ItemSwapper.NTotalIdentifiableItemEntries -  LootedUnkStackUnits
         ;Debug.Notification("NPlayerUnkItems1 (before looting): " + ItemSwapper.NPlayerUnkItems1)
         ;Debug.Notification("NPlayerUnkItems2 (after looting): " + NPlayerUnkItems2)
-        ;Debug.Notification("LootedUnkStackUnits: " + ItemSwapper.LootedUnkStackUnits)
+        ;Debug.Notification("LootedUnkStackUnits: " + LootedUnkStackUnits)
         String CurrIdentifiableItemEntryNamePath
         String CurrIdentifiableItemEntryCountPath
         Form LastIdentifiableItem = ItemSwapper.CurrIdentifiableItem
@@ -33,5 +33,7 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
             
 
         ItemSwapper.DBBlock = FALSE ; lets identification mechanic work again (because you have now pending loot to be identified)
+
+        Debug.Notification("Unidentified Item(s) bound to you")
     endif
 EndEvent

@@ -15,7 +15,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
     if(akTarget == PlayerRef)
         if(ItemSwapper.DBBlock == FALSE)
             ItemSwapper.DropCheckBlock = TRUE ; stop removal check during identiification process
-            PlayerRef.RemoveItem(_LUIIS_UnkItem, PlayerRef.GetItemCount(_LUIIS_UnkItem)) ; Remove all unidentified items
+            PlayerRef.RemoveItem(_LUIIS_UnkItem, PlayerRef.GetItemCount(_LUIIS_UnkItem), TRUE) ; Remove all unidentified items
             int i = 0
             While (i < ItemSwapper.NTotalIdentifiableItemEntries)
                 TargetIdentifiableItemEntry = JDB.SolveForm("._LUIIS_IdentifiableItemEntry" + i + ".form")
@@ -33,7 +33,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
             ItemSwapper.DBBlock = TRUE ; block the db until you loot again
             ItemSwapper.DropCheckBlock = FALSE ; reinits removal check after identiification process
         Else
-            Debug.Notification("You already identified all pending items")
+            Debug.Notification("You already identified all pending Unidentified Items")
             PlayerRef.AddItem(_LUIIS_IdScroll,1,true) ; readds so you dont waste it
         endif
     endif

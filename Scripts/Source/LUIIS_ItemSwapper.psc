@@ -104,6 +104,7 @@ Event OnMenuClose(String MenuName) ;; When opening a container
         if(ThisContainer.GetItemCount(_LUIIS_UnkItem) > 0) ; if player left any unk item in container
             TradeBlock = TRUE ; just in case
             OrphanClean() ; cleans orphans
+            Debug.Notification("Unidentified Items cannot be removed from your Inventory")
             TradeBlock = FALSE
         endif
 
@@ -118,12 +119,12 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRef,
     
     if DropCheckBlock == FALSE && akDestContainer == None && akItemRef ; 1 prevents this from happening when performing identification and 2 dropped to the world (akDestContainer == None)
 
-        Debug.Notification("LUIIS: Removed Unidentified Item")
+        ;Debug.Notification("LUIIS: Removed Unidentified Item")
         TradeBlock = TRUE
         akItemRef.Disable()  ; Disable the reference to prevent it from being used
         akItemRef.Delete()   ; Remove the reference from the world
         PlayerRef.AddItem(akBaseItem, aiItemCount) ; Add back to player's inventory
-        Debug.Notification("You cannot drop this item.")
+        Debug.Notification("Unidentified Items cannot be removed from your Inventory")
         
         TradeBlock = FALSE
     endif
