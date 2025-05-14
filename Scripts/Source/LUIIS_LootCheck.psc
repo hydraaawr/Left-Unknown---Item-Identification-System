@@ -4,6 +4,7 @@ Scriptname LUIIS_LootCheck extends ObjectReference
 Actor Property PlayerRef auto
 LUIIS_ItemSwapper Property ItemSwapper auto
 MiscObject Property _LUIIS_UnkItem auto
+GlobalVariable Property _LUIIS_Debug auto
 int LootedUnkStackUnits
 
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
@@ -27,7 +28,9 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
             ;Debug.Notification("Last looted item entry index: " + (LootStartIndex + i))
             CurrIdentifiableItemEntryNamePath = "._LUIIS_IdentifiableItemEntry" + (LootStartIndex + i) + ".name"
             CurrIdentifiableItemEntryCountPath = "._LUIIS_IdentifiableItemEntry" + (LootStartIndex + i) + ".count"
-            Debug.Notification("Last looted identifiable item entry: " + JDB.SolveStr(CurrIdentifiableItemEntryNamePath) + ", count: " + JDB.SolveInt(CurrIdentifiableItemEntryCountPath))
+            if(_LUIIS_Debug.GetValue() == 1)
+                Debug.Notification("Last looted identifiable item entry: " + JDB.SolveStr(CurrIdentifiableItemEntryNamePath) + ", count: " + JDB.SolveInt(CurrIdentifiableItemEntryCountPath))
+            endif
             i+=1
         endwhile
             

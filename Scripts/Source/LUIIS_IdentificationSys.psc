@@ -5,6 +5,7 @@ Actor Property PlayerRef auto
 MiscObject Property _LUIIS_UnkItem auto
 LUIIS_ItemSwapper Property ItemSwapper auto
 Scroll Property _LUIIS_IdScroll auto
+GlobalVariable Property _LUIIS_Debug auto
 
 form TargetIdentifiableItemEntry
 int TargetIdentifiableItemEntryCount
@@ -23,7 +24,9 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 
                 TargetIdentifiableItemEntry = JDB.SolveForm("._LUIIS_IdentifiableItemEntry" + i + ".form")
                 TargetIdentifiableItemEntryCount = JDB.solveInt("._LUIIS_IdentifiableItemEntry" + i + ".count")
-                Debug.Notification("Identifiying entry " + i + " " + TargetIdentifiableItemEntry.GetName() + ", count: " + TargetIdentifiableItemEntryCount)
+                if(_LUIIS_Debug.GetValue() == 1)
+                    Debug.Notification("Identifiying entry " + i + " " + TargetIdentifiableItemEntry.GetName() + ", count: " + TargetIdentifiableItemEntryCount)
+                endif
                 PlayerRef.AddItem(TargetIdentifiableItemEntry, TargetIdentifiableItemEntryCount)
 
                 i+=1
