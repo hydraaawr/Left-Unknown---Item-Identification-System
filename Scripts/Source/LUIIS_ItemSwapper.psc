@@ -104,7 +104,7 @@ Event OnMenuClose(String MenuName) ;; When opening a container
         if(ThisContainer.GetItemCount(_LUIIS_UnkItem) > 0) ; if player left any unk item in container
             TradeBlock = TRUE ; just in case
             OrphanClean() ; cleans orphans
-            Debug.Notification("Unidentified Items cannot be removed from your Inventory")
+            ;Debug.Notification("Unidentified Items cannot be removed from your Inventory")
             TradeBlock = FALSE
         endif
 
