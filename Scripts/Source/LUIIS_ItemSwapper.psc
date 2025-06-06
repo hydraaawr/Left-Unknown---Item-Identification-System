@@ -32,7 +32,7 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
         int j = 0
         while j < ThisContainerItems.Length ;; travel the whole content
             CurrIdentifiableItem = ThisContainerItems[j]
-            if CurrIdentifiableItem.HasKeyword(_LUIIS_IsIdentifiable) && PO3_SKSEFunctions.IsQuestItem(CurrIdentifiableItem as ObjectReference) == 0 ;; if its identifiable
+            if CurrIdentifiableItem.HasKeyword(_LUIIS_IsIdentifiable) ;; if its identifiable
                 
                 CurrIdentifiableItemCount = ThisContainer.GetItemCount(CurrIdentifiableItem)
                 String CurrIdentifiableItemEntryNamePath = "._LUIIS_IdentifiableItemEntry" + NTotalIdentifiableItemEntries + ".name"
