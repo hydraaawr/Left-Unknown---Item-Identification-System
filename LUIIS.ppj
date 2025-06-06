@@ -18,7 +18,7 @@
     <Imports>
         <Import>C:\Juegos\skyrim_modding\mods\Game Root\Data\Source\Scripts</Import>
         <Import>C:\Juegos\skyrim_modding\mods\mods\JContainers\scripts\source</Import>
-
+        <Import>C:\Juegos\skyrim_modding\mods\mods\powerofthree's Papyrus Extender\Source\scripts</Import>
     </Imports>
     <Folders>
         <!-- Relative path to folder containing .psc Papyrus source code files for this project -->
