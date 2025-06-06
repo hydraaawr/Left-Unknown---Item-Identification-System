@@ -19,8 +19,6 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
             PlayerRef.RemoveItem(_LUIIS_UnkItem, PlayerRef.GetItemCount(_LUIIS_UnkItem), TRUE) ; Remove all unidentified items
             int i = 0
             While (i < ItemSwapper.NTotalIdentifiableItemEntries)
-                TargetIdentifiableItemEntry = JDB.SolveForm("._LUIIS_IdentifiableItemEntry" + i + ".form")
-                TargetIdentifiableItemEntryCount = JDB.solveInt("._LUIIS_IdentifiableItemEntry" + i + ".count")
 
                 TargetIdentifiableItemEntry = JDB.SolveForm("._LUIIS_IdentifiableItemEntry" + i + ".form")
                 TargetIdentifiableItemEntryCount = JDB.solveInt("._LUIIS_IdentifiableItemEntry" + i + ".count")
