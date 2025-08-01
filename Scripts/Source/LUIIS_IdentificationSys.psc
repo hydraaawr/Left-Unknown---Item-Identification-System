@@ -10,6 +10,7 @@ GlobalVariable Property _LUIIS_Debug auto
 form TargetIdentifiableItemEntry
 int TargetIdentifiableItemEntryCount
 
+import StorageUtil
 
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
@@ -20,8 +21,8 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
             int i = 0
             While (i < ItemSwapper.NTotalIdentifiableItemEntries)
 
-                TargetIdentifiableItemEntry = JDB.SolveForm("._LUIIS_IdentifiableItemEntry" + i + ".form")
-                TargetIdentifiableItemEntryCount = JDB.solveInt("._LUIIS_IdentifiableItemEntry" + i + ".count")
+                TargetIdentifiableItemEntry = GetFormValue(_LUIIS_UnkItem,"._LUIIS_IdentifiableItemEntry" + i + ".form")
+                TargetIdentifiableItemEntryCount = GetIntValue(_LUIIS_UnkItem,"._LUIIS_IdentifiableItemEntry" + i + ".count")
                 if(_LUIIS_Debug.GetValue() == 1)
                     Debug.Notification("Identifiying entry " + i + " " + TargetIdentifiableItemEntry.GetName() + ", count: " + TargetIdentifiableItemEntryCount)
                 endif

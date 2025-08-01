@@ -7,7 +7,10 @@ MiscObject Property _LUIIS_UnkItem auto
 GlobalVariable Property _LUIIS_Debug auto
 int LootedUnkStackUnits
 
+import StorageUtil
+
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
+
     if(akOldContainer != PlayerRef && akNewContainer == PlayerRef && ItemSwapper.TradeBlock == FALSE) ;if player looted it and you are not dropping and readding an item
         
         ;Debug.Notification("Player Looted Unidentified Item(s)")
@@ -18,18 +21,16 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
         ;Debug.Notification("NPlayerUnkItems1 (before looting): " + ItemSwapper.NPlayerUnkItems1)
         ;Debug.Notification("NPlayerUnkItems2 (after looting): " + NPlayerUnkItems2)
         ;Debug.Notification("LootedUnkStackUnits: " + LootedUnkStackUnits)
-        String CurrIdentifiableItemEntryNamePath
-        String CurrIdentifiableItemEntryCountPath
-        Form LastIdentifiableItem = ItemSwapper.CurrIdentifiableItem
+        
         
         int i = 0
         while i <  LootedUnkStackUnits ; travel the whole looted stack
 
             ;Debug.Notification("Last looted item entry index: " + (LootStartIndex + i))
-            CurrIdentifiableItemEntryNamePath = "._LUIIS_IdentifiableItemEntry" + (LootStartIndex + i) + ".name"
-            CurrIdentifiableItemEntryCountPath = "._LUIIS_IdentifiableItemEntry" + (LootStartIndex + i) + ".count"
+            String CurrIdentifiableItemEntryNamePath = "._LUIIS_IdentifiableItemEntry" + (LootStartIndex + i) + ".name"
+            String CurrIdentifiableItemEntryCountPath = "._LUIIS_IdentifiableItemEntry" + (LootStartIndex + i) + ".count"
             if(_LUIIS_Debug.GetValue() == 1)
-                Debug.Notification("Last looted identifiable item entry: " + JDB.SolveStr(CurrIdentifiableItemEntryNamePath) + ", count: " + JDB.SolveInt(CurrIdentifiableItemEntryCountPath))
+                Debug.Notification("Last looted identifiable item entry: " + GetStringValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryNamePath) + ", count: " + GetintValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryCountPath))
             endif
             i+=1
         endwhile
@@ -38,5 +39,23 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
         ItemSwapper.DBBlock = FALSE ; lets identification mechanic work again (because you have now pending loot to be identified)
 
         Debug.Notification("Unidentified Item(s) bound to you")
+
+
+
+
+    elseif(akOldContainer == PlayerRef && akNewContainer != PlayerRef && ItemSwapper.TradeBlock == FALSE) ; on turning back to container
+        ;; Pluck last entry
+
+        String LastIdentifiableItemEntryNamePath = "._LUIIS_IdentifiableItemEntry" + (ItemSwapper.NTotalIdentifiableItemEntries) + ".name"
+        String LastIdentifiableItemEntryCountPath = "._LUIIS_IdentifiableItemEntry" + (ItemSwapper.NTotalIdentifiableItemEntries) + ".count"
+        String LastIdentifiableItemEntryFormPath = "._LUIIS_IdentifiableItemEntry" + (ItemSwapper.NTotalIdentifiableItemEntries) + ".form"
+
+        PluckStringValue(_LUIIS_UnkItem,LastIdentifiableItemEntryNamePath)
+        PluckIntValue(_LUIIS_UnkItem,LastIdentifiableItemEntryCountPath)
+        PluckFormValue(_LUIIS_UnkItem,LastIdentifiableItemEntryFormPath)
+
+        ItemSwapper.NTotalIdentifiableItemEntries-=1 ;; Decrease parallel value that counts the size by one
+
+
     endif
 EndEvent

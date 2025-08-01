@@ -18,6 +18,8 @@ int CurrIdentifiableItemCount
 int NThisContainerOrphanUnkItems1
 int NThisContainerOrphanUnkItems2
 
+import StorageUtil
+
 
 function IdentifiableSwap() ;;  Gets identifiable items from current container and swaps them      
 
@@ -39,10 +41,13 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
                 String CurrIdentifiableItemEntryCountPath = "._LUIIS_IdentifiableItemEntry" + NTotalIdentifiableItemEntries + ".count"
                 String CurrIdentifiableItemEntryFormPath = "._LUIIS_IdentifiableItemEntry" + NTotalIdentifiableItemEntries + ".form"
                 ;Debug.Notification("Path: " + IdentifiableItemNamePath) ;;  DEBUG
-                JDB.solveStrSetter(CurrIdentifiableItemEntryNamePath, CurrIdentifiableItem.GetName(), true) ;  its name
-                JDB.solveIntSetter(CurrIdentifiableItemEntryCountPath,CurrIdentifiableItemCount , true) ; its count
-                JDB.solveFormSetter(CurrIdentifiableItemEntryFormPath, CurrIdentifiableItem, true) ; its form
-                ;Debug.Notification("Current identifiable item: " + JDB.SolveStr(IdentifiableItemNamePath) +  ", count: " + JDB.SolveInt(IdentifiableItemCountPath)) ;DEBUG
+    
+
+                SetStringValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryNamePath,CurrIdentifiableItem.GetName())
+                SetIntValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryCountPath,CurrIdentifiableItemCount)
+                SetFormValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryFormPath,CurrIdentifiableItem)
+
+                Debug.Notification("Current identifiable item: " + GetStringValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryNamePath) +  ", count: " + GetIntValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryCountPath)) ;DEBUG
                 ThisContainer.RemoveItem(CurrIdentifiableItem,CurrIdentifiableItemCount) ;; Remove it
                 NThisContainerSingleIdentifiableItems += 1
                 NTotalIdentifiableItemEntries += 1
@@ -61,12 +66,12 @@ endfunction
 
 
 
-function OrphanClean() ; orphans are unk items that were left in container. They must be cleansed
+; function OrphanClean() ; orphans are unk items that were left in container. They must be cleansed
 
-    ThisContainer.RemoveItem(_LUIIS_UnkItem,NThisContainerOrphanUnkItems2)
-    PlayerRef.AddItem(_LUIIS_UnkItem,NThisContainerOrphanUnkItems2,FALSE) ; readds them to player
+;     ThisContainer.RemoveItem(_LUIIS_UnkItem,NThisContainerOrphanUnkItems2)
+;     PlayerRef.AddItem(_LUIIS_UnkItem,NThisContainerOrphanUnkItems2,FALSE) ; readds them to player
 
-endfunction
+; endfunction
 
 
 
@@ -87,7 +92,7 @@ Event OnMenuOpen(String MenuName) ;; When opening a container
         ;Debug.Notification("Opened a container")
         IdentifiableSwap()
         NPlayerUnkItems1 = PlayerRef.GetItemCount(_LUIIS_UnkItem)
-        NThisContainerOrphanUnkItems1 = ThisContainer.GetItemCount(_LUIIS_UnkItem)
+        ;NThisContainerOrphanUnkItems1 = ThisContainer.GetItemCount(_LUIIS_UnkItem)
 
     endIf
 
@@ -95,23 +100,23 @@ endEvent
 
 
 
-Event OnMenuClose(String MenuName) ;; When opening a container
+; Event OnMenuClose(String MenuName) ;; When opening a container
 
-    if (MenuName == "LootMenu" || MenuName == "containerMenu") ; for both vanilla and quickloot compat
+;     if (MenuName == "LootMenu" || MenuName == "containerMenu") ; for both vanilla and quickloot compat
         
-        NThisContainerOrphanUnkItems2 = ThisContainer.GetItemCount(_LUIIS_UnkItem)
+;         NThisContainerOrphanUnkItems2 = ThisContainer.GetItemCount(_LUIIS_UnkItem)
 
-        if(ThisContainer.GetItemCount(_LUIIS_UnkItem) > 0) ; if player left any unk item in container
-            TradeBlock = TRUE ; just in case
-            OrphanClean() ; cleans orphans
-            ;Debug.Notification("Unidentified Items cannot be removed from your Inventory")
-            TradeBlock = FALSE
-        endif
+;         if(ThisContainer.GetItemCount(_LUIIS_UnkItem) > 0) ; if player left any unk item in container
+;             TradeBlock = TRUE ; just in case
+;             OrphanClean() ; cleans orphans
+;             ;Debug.Notification("Unidentified Items cannot be removed from your Inventory")
+;             TradeBlock = FALSE
+;         endif
 
 
-    endIf
+;     endIf
 
-endEvent
+; endEvent
 
 
 Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRef, ObjectReference akDestContainer)
