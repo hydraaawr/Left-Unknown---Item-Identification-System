@@ -10,8 +10,6 @@ Form[] ThisContainerItems
 int NThisContainerSingleIdentifiableItems ; Number of Identifiable Items in the current container
 int property NTotalIdentifiableItemEntries auto ; Total number of SINGLE identifiable items = entries in db. Must persist bt saves. Determines the order of entries
 form property CurrIdentifiableItem auto
-int property NPlayerUnkItems1 auto
-bool Property TradeBlock = FALSE auto ; prevents lootcheck activating when readding unk item after removal (drop,  turn back to container)
 bool Property DropCheckBlock = FALSE auto  ; prevents removal from happening (in order not to collide identification and uk item drop check mechanic)
 int CurrIdentifiableItemCount
 int NThisContainerOrphanUnkItems
@@ -113,7 +111,6 @@ Event OnMenuOpen(String MenuName) ;; When opening a container
     if (MenuName == "LootMenu" || MenuName == "containerMenu") ; for both vanilla and quickloot compat
         ;Debug.Notification("Opened a container") ;DEBUG
         IdentifiableSwap()
-        NPlayerUnkItems1 = PlayerRef.GetItemCount(_LUIIS_UnkItem)
 
     endIf
 
@@ -141,13 +138,11 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRef,
     if DropCheckBlock == FALSE && akDestContainer == None && akItemRef ; 1 prevents this from happening when performing identification and 2 dropped to the world (akDestContainer == None)
 
         ;Debug.Notification("LUIIS: Removed Unidentified Item")
-        TradeBlock = TRUE
         akItemRef.Disable()  ; Disable the reference to prevent it from being used
         akItemRef.Delete()   ; Remove the reference from the world
         PlayerRef.AddItem(akBaseItem, aiItemCount) ; Add back to player's inventory
         Debug.Notification("Unidentified Items cannot be removed from your Inventory")
-        
-        TradeBlock = FALSE
+
     endif
     
 EndEvent
