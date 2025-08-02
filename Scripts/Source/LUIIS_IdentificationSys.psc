@@ -15,7 +15,7 @@ import StorageUtil
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
     if(akTarget == PlayerRef)
-        if(ItemSwapper.DBBlock == FALSE)
+        if(ItemSwapper.NTotalIdentifiableItemEntries > 0)
             ItemSwapper.DropCheckBlock = TRUE ; stop removal check during identiification process
             PlayerRef.RemoveItem(_LUIIS_UnkItem, PlayerRef.GetItemCount(_LUIIS_UnkItem), TRUE) ; Remove all unidentified items
             int i = 0
@@ -32,7 +32,6 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
             EndWhile
             ;; after returning all the identified items
             ItemSwapper.NTotalIdentifiableItemEntries = 0 ; resets the db index (will start to overwrite from 0)
-            ItemSwapper.DBBlock = TRUE ; block the db until you loot again
             ItemSwapper.DropCheckBlock = FALSE ; reinits removal check after identiification process
         Else
             Debug.Notification("You already identified all pending Unidentified Items")

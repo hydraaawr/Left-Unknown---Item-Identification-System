@@ -36,8 +36,6 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
         endwhile
             
 
-        ItemSwapper.DBBlock = FALSE ; lets identification mechanic work again (because you have now pending loot to be identified)
-
         Debug.Notification("Unidentified Item(s) bound to you")
 
     endif
