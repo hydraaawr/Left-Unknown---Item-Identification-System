@@ -43,7 +43,7 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
                 SetIntValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryCountPath,CurrIdentifiableItemCount)
                 SetFormValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryFormPath,CurrIdentifiableItem)
 
-                Debug.Notification("Current identifiable item: " + GetStringValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryNamePath) +  ", count: " + GetIntValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryCountPath)) ;DEBUG
+                Debug.Notification("Current entry added: " + NTotalIdentifiableItemEntries + ", " + GetStringValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryNamePath) +  ", count: " + GetIntValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryCountPath)) ;DEBUG
                 ThisContainer.RemoveItem(CurrIdentifiableItem,CurrIdentifiableItemCount) ;; Remove it
                 NThisContainerSingleIdentifiableItems += 1
                 NTotalIdentifiableItemEntries += 1
@@ -63,7 +63,7 @@ endfunction
 function ReverseSwap() ; For orphan unk items that were left in container
     NThisContainerOrphanUnkItems = ThisContainer.GetItemCount(_LUIIS_UnkItem) ; unk items that were left in the container (werent looted or wereturned back)
         
-    Debug.Notification("NThisContainerOrphans: " + NThisContainerOrphanUnkItems) ;DEBUG
+    ;Debug.Notification("NThisContainerOrphans: " + NThisContainerOrphanUnkItems) ;DEBUG
 
     if NThisContainerOrphanUnkItems > 0 ; If anything
         int EntryIndex = NTotalIdentifiableItemEntries - NThisContainerOrphanUnkItems ; to start from the last items in the list
@@ -78,12 +78,13 @@ function ReverseSwap() ; For orphan unk items that were left in container
         
             ;; Pluck last orphan entries from db
     
-            String LastIdentifiableItemEntryNamePath = "._LUIIS_IdentifiableItemEntry" + (EntryIndex + i) + ".name"
-            String LastIdentifiableItemEntryCountPath = "._LUIIS_IdentifiableItemEntry" + (EntryIndex + i) + ".count"
-            String LastIdentifiableItemEntryFormPath = "._LUIIS_IdentifiableItemEntry" + (EntryIndex + i) + ".form"
-            PluckStringValue(_LUIIS_UnkItem,LastIdentifiableItemEntryNamePath)
-            PluckIntValue(_LUIIS_UnkItem,LastIdentifiableItemEntryCountPath)
-            PluckFormValue(_LUIIS_UnkItem,LastIdentifiableItemEntryFormPath)
+            String CurrPluckItemEntryNamePath = "._LUIIS_IdentifiableItemEntry" + (EntryIndex + i) + ".name"
+            String CurrPluckItemEntryCountPath = "._LUIIS_IdentifiableItemEntry" + (EntryIndex + i) + ".count"
+            String CurrPluckItemEntryFormPath = "._LUIIS_IdentifiableItemEntry" + (EntryIndex + i) + ".form"
+            Debug.Notification("Current plucked entry: " + (EntryIndex + i) + ", " + GetStringValue(_LUIIS_UnkItem, CurrPluckItemEntryNamePath) + ", count: " + GetIntValue(_LUIIS_UnkItem, CurrPluckItemEntryCountPath))
+            PluckStringValue(_LUIIS_UnkItem,CurrPluckItemEntryNamePath)
+            PluckIntValue(_LUIIS_UnkItem,CurrPluckItemEntryCountPath)
+            PluckFormValue(_LUIIS_UnkItem,CurrPluckItemEntryFormPath)
             i += 1
         endwhile
 
@@ -91,7 +92,7 @@ function ReverseSwap() ; For orphan unk items that were left in container
         NTotalIdentifiableItemEntries -= NThisContainerOrphanUnkItems ; Decrease the number of total entries to travel
     endif
 
-    Debug.Notification("NTotalIdentifiable Entries left: " + NTotalIdentifiableItemEntries) ;DEBUG
+    ;Debug.Notification("NTotalIdentifiable Entries left: " + NTotalIdentifiableItemEntries) ;DEBUG
 endfunction
 
 
@@ -132,7 +133,7 @@ Event OnMenuClose(String MenuName) ;; When closing a container
 endEvent
 
 
-Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRef, ObjectReference akDestContainer)
+Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRef, ObjectReference akDestContainer) ; Prevents dropping of unidentified items
     
     
     if DropCheckBlock == FALSE && akDestContainer == None && akItemRef ; 1 prevents this from happening when performing identification and 2 dropped to the world (akDestContainer == None)
