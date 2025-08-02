@@ -40,22 +40,6 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
 
         Debug.Notification("Unidentified Item(s) bound to you")
 
-
-
-
-    elseif(akOldContainer == PlayerRef && akNewContainer != PlayerRef && ItemSwapper.TradeBlock == FALSE) ; on turning back to container
-        ;; Pluck last entry
-
-        String LastIdentifiableItemEntryNamePath = "._LUIIS_IdentifiableItemEntry" + (ItemSwapper.NTotalIdentifiableItemEntries) + ".name"
-        String LastIdentifiableItemEntryCountPath = "._LUIIS_IdentifiableItemEntry" + (ItemSwapper.NTotalIdentifiableItemEntries) + ".count"
-        String LastIdentifiableItemEntryFormPath = "._LUIIS_IdentifiableItemEntry" + (ItemSwapper.NTotalIdentifiableItemEntries) + ".form"
-
-        PluckStringValue(_LUIIS_UnkItem,LastIdentifiableItemEntryNamePath)
-        PluckIntValue(_LUIIS_UnkItem,LastIdentifiableItemEntryCountPath)
-        PluckFormValue(_LUIIS_UnkItem,LastIdentifiableItemEntryFormPath)
-
-        ItemSwapper.NTotalIdentifiableItemEntries-=1 ;; Decrease parallel value that counts the size by one
-
-
     endif
+
 EndEvent
