@@ -10,6 +10,8 @@ GlobalVariable Property _LUIIS_Debug auto
 form TargetIdentifiableItemEntry
 int TargetIdentifiableItemEntryCount
 
+Keyword Property _LUIIS_AlreadyIdentified auto
+
 import StorageUtil
 
 
@@ -27,6 +29,8 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
                     Debug.Notification("Identifiying entry " + i + " " + TargetIdentifiableItemEntry.GetName() + ", count: " + TargetIdentifiableItemEntryCount)
                 endif
                 PlayerRef.AddItem(TargetIdentifiableItemEntry, TargetIdentifiableItemEntryCount)
+
+                PO3_SKSEFunctions.AddKeywordToForm(TargetIdentifiableItemEntry,_LUIIS_AlreadyIdentified) ;; For ItemSwapper to remember not to touch these
 
                 i+=1
             EndWhile

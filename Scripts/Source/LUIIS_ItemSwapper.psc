@@ -14,6 +14,8 @@ bool Property DropCheckBlock = FALSE auto  ; prevents removal from happening (in
 int CurrIdentifiableItemCount
 int NThisContainerOrphanUnkItems
 
+Keyword Property _LUIIS_AlreadyIdentified auto
+
 import StorageUtil
 
 
@@ -30,7 +32,7 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
         int j = 0
         while j < ThisContainerItems.Length ;; travel the whole content
             CurrIdentifiableItem = ThisContainerItems[j]
-            if CurrIdentifiableItem.HasKeyword(_LUIIS_IsIdentifiable) ;; if its identifiable
+            if CurrIdentifiableItem.HasKeyword(_LUIIS_IsIdentifiable) && !CurrIdentifiableItem.HasKeyword(_LUIIS_AlreadyIdentified) ;; if its identifiable and not already identified
                 
                 CurrIdentifiableItemCount = ThisContainer.GetItemCount(CurrIdentifiableItem)
                 String CurrIdentifiableItemEntryNamePath = "._LUIIS_IdentifiableItemEntry" + NTotalIdentifiableItemEntries + ".name"
