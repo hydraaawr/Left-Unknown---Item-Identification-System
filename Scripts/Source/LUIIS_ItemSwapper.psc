@@ -15,6 +15,7 @@ int CurrIdentifiableItemCount
 int NThisContainerOrphanUnkItems
 
 Keyword Property _LUIIS_AlreadyIdentified auto
+GlobalVariable Property _LUIIS_Debug auto
 
 import StorageUtil
 
@@ -44,8 +45,9 @@ function IdentifiableSwap() ;;  Gets identifiable items from current container a
                 SetStringValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryNamePath,CurrIdentifiableItem.GetName())
                 SetIntValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryCountPath,CurrIdentifiableItemCount)
                 SetFormValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryFormPath,CurrIdentifiableItem)
-
-                Debug.Notification("Current entry added: " + NTotalIdentifiableItemEntries + ", " + GetStringValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryNamePath) +  ", count: " + GetIntValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryCountPath)) ;DEBUG
+                if(_LUIIS_Debug.GetValue() == 1)
+                    Debug.Notification("Current entry added: " + NTotalIdentifiableItemEntries + ", " + GetStringValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryNamePath) +  ", count: " + GetIntValue(_LUIIS_UnkItem,CurrIdentifiableItemEntryCountPath))
+                endif
                 ThisContainer.RemoveItem(CurrIdentifiableItem,CurrIdentifiableItemCount) ;; Remove it
                 NThisContainerSingleIdentifiableItems += 1
                 NTotalIdentifiableItemEntries += 1
@@ -83,7 +85,9 @@ function ReverseSwap() ; For orphan unk items that were left in container
             String CurrPluckItemEntryNamePath = "._LUIIS_IdentifiableItemEntry" + (EntryIndex + i) + ".name"
             String CurrPluckItemEntryCountPath = "._LUIIS_IdentifiableItemEntry" + (EntryIndex + i) + ".count"
             String CurrPluckItemEntryFormPath = "._LUIIS_IdentifiableItemEntry" + (EntryIndex + i) + ".form"
-            Debug.Notification("Current plucked entry: " + (EntryIndex + i) + ", " + GetStringValue(_LUIIS_UnkItem, CurrPluckItemEntryNamePath) + ", count: " + GetIntValue(_LUIIS_UnkItem, CurrPluckItemEntryCountPath))
+            if(_LUIIS_Debug.GetValue() == 1)
+                Debug.Notification("Current plucked entry: " + (EntryIndex + i) + ", " + GetStringValue(_LUIIS_UnkItem, CurrPluckItemEntryNamePath) + ", count: " + GetIntValue(_LUIIS_UnkItem, CurrPluckItemEntryCountPath))
+            endif
             PluckStringValue(_LUIIS_UnkItem,CurrPluckItemEntryNamePath)
             PluckIntValue(_LUIIS_UnkItem,CurrPluckItemEntryCountPath)
             PluckFormValue(_LUIIS_UnkItem,CurrPluckItemEntryFormPath)
@@ -138,7 +142,7 @@ endEvent
 Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRef, ObjectReference akDestContainer) ; Prevents dropping of unidentified items
     
     
-    if DropCheckBlock == FALSE && akDestContainer == None && akItemRef ; 1 prevents this from happening when performing identification and 2 dropped to the world (akDestContainer == None)
+    if DropCheckBlock == FALSE && akDestContainer == None && akItemRef ; 1 prevents this from happening when performing identification and 2 checks if dropped to the world (akDestContainer == None)
 
         ;Debug.Notification("LUIIS: Removed Unidentified Item")
         akItemRef.Disable()  ; Disable the reference to prevent it from being used
